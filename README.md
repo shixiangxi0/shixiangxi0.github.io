@@ -1,15 +1,12 @@
 # shixiangxi0.github.io
 
-```bash
-echo "# shixiangxi0.github.io" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/shixiangxi0/shixiangxi0.github.io.git
-git push -u origin main
-```
-
-This repository is used for the GitHub Pages root site:
+Minimal GitHub Pages site for:
 
 `https://shixiangxi0.github.io/`
+
+Only these are needed:
+
+1. Repository name: `shixiangxi0.github.io`
+2. Repository visibility: `Public`
+3. A root `index.html`
+4. `Settings -> Pages -> Deploy from a branch -> main -> /(root)`
