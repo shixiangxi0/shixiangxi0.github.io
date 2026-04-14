@@ -4,46 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>shixiangxi0.github.io</title>
+    <meta name="description" content="shixiangxi0 的 GitHub Pages 首页。">
     <style>
+        :root {
+            color-scheme: light;
+            --bg: #f4efe8;
+            --card: rgba(255, 251, 245, 0.9);
+            --text: #1f1c18;
+            --muted: #685f56;
+            --accent: #b85a3b;
+            --line: rgba(31, 28, 24, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(233, 170, 113, 0.35), transparent 28%),
+                linear-gradient(180deg, #f5efe6 0%, var(--bg) 100%);
+            font-family: "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
         }
-        .container {
-            text-align: center;
-            color: white;
-            padding: 2rem;
+
+        .card {
+            width: min(720px, 100%);
+            padding: 40px 32px;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            background: var(--card);
+            box-shadow: 0 24px 60px rgba(68, 44, 24, 0.12);
         }
+
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: 0.82rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
         h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(2.4rem, 8vw, 4.5rem);
+            line-height: 1.08;
+        }
+
+        p {
+            margin: 18px 0 0;
+            font-size: 1.08rem;
+            line-height: 1.75;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
             font-weight: 700;
         }
-        p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        a {
-            color: white;
+
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>欢迎来到我的主页</h1>
-        <p>我的 GitHub Pages 主页</p>
-        <p>
-            <a href="https://shixiangxi0.github.io/">
-                https://shixiangxi0.github.io/
-            </a>
-        </p>
-        <p>这里即将呈现精彩内容...</p>
-    </div>
+    <main class="card">
+        <p class="eyebrow">GitHub Pages</p>
+        <h1>shixiangxi0.github.io</h1>
+        <p>这是一个简单展示页，后面可以继续扩展成博客、个人主页或项目导航站。</p>
+        <p class="muted">如果你现在能看到这个页面，说明根地址已经正确指向这个仓库。</p>
+        <p><a href="https://github.com/shixiangxi0/shixiangxi0.github.io">查看 GitHub 仓库</a></p>
+    </main>
 </body>
 </html>

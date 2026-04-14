@@ -1,13 +1,15 @@
 # shixiangxi0.github.io
 
-This site is intended to be the GitHub Pages user homepage for `shixiangxi0`.
+```bash
+echo "# shixiangxi0.github.io" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/shixiangxi0/shixiangxi0.github.io.git
+git push -u origin main
+```
 
-Target URL:
+This repository is used for the GitHub Pages root site:
 
 `https://shixiangxi0.github.io/`
-
-To make that work, the GitHub repository name must be exactly:
-
-`shixiangxi0.github.io`
-
-This repo includes a GitHub Actions workflow at `.github/workflows/deploy-pages.yml` to deploy the static site from the `main` branch.
