@@ -3,320 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>基于生产环境行为轨迹的逻辑合成模型</title>
-    <meta
-        name="description"
-        content="从软件工程实践出发，讨论复杂系统中的隐式逻辑、传统需求-代码范式的局限，以及基于生产环境行为轨迹的逻辑合成假说。"
-    >
+    <title>需求文档是错误的训练信号 — 影子演化范式</title>
+    <meta name="description" content="软件系统中决定稳定性的隐式逻辑，从未出现在任何需求文档里。用生产环境行为轨迹替代需求文档，作为 AI 编程的训练信号。">
+    <meta property="og:title" content="需求文档是错误的训练信号">
+    <meta property="og:description" content="软件系统中决定稳定性的隐式逻辑，从未出现在任何需求文档里。用生产环境行为轨迹替代需求文档，作为 AI 编程的训练信号。">
+    <meta property="og:type" content="article">
     <style>
         :root {
             color-scheme: light;
-            --bg: #f5f2ec;
-            --paper: #fffdf9;
-            --text: #1f1c18;
-            --muted: #6c645a;
-            --line: rgba(31, 28, 24, 0.12);
-            --accent: #8f4a30;
-            --shadow: 0 20px 48px rgba(61, 47, 34, 0.1);
+            --bg: #f6f1e8;
+            --paper: #fffaf2;
+            --text: #1f1b16;
+            --muted: #6d6459;
+            --line: rgba(31, 27, 22, 0.12);
+            --accent: #9f4d31;
+            --accent-bg: rgba(159, 77, 49, 0.06);
+            --shadow: 0 24px 60px rgba(74, 52, 32, 0.12);
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
-            padding: 28px 14px 48px;
+            padding: 32px 16px 56px;
             color: var(--text);
-            background: linear-gradient(180deg, #f7f4ef 0%, var(--bg) 100%);
+            background:
+                radial-gradient(circle at top left, rgba(231, 180, 132, 0.26), transparent 24%),
+                linear-gradient(180deg, #f8f3eb 0%, var(--bg) 100%);
             font-family: "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
-            line-height: 1.82;
+            line-height: 1.85;
         }
 
-        main {
+        .page {
             width: min(920px, 100%);
             margin: 0 auto;
-            padding: 36px 28px 42px;
+            padding: 48px 36px;
             border: 1px solid var(--line);
-            border-radius: 18px;
+            border-radius: 28px;
             background: var(--paper);
             box-shadow: var(--shadow);
         }
 
-        h1,
-        h2,
-        h3 {
-            font-family: Georgia, "Times New Roman", serif;
-            line-height: 1.25;
+        .eyebrow {
+            margin: 0 0 10px;
+            color: var(--accent);
+            font-size: 0.82rem;
             font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        h1, h2 {
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1.2;
         }
 
         h1 {
-            margin: 0 0 12px;
-            font-size: clamp(2rem, 4vw, 3rem);
+            margin: 0 0 8px;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+        }
+
+        .subtitle {
+            margin: 0 0 28px;
+            font-size: 1.15rem;
+            color: var(--muted);
+            line-height: 1.6;
         }
 
         h2 {
-            margin: 30px 0 12px;
-            font-size: 1.55rem;
+            margin: 44px 0 14px;
+            font-size: 1.7rem;
         }
 
-        h3 {
-            margin: 22px 0 10px;
-            font-size: 1.16rem;
+        p, li { font-size: 1.05rem; }
+        p { margin: 14px 0; }
+        ul { margin: 12px 0; padding-left: 22px; }
+
+        .callout {
+            margin: 24px 0;
+            padding: 20px 24px;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 16px 16px 0;
+            background: var(--accent-bg);
         }
 
-        p,
-        li {
-            font-size: 1rem;
+        .callout.insight {
+            border-left-color: #2d6a4f;
+            background: rgba(45, 106, 79, 0.06);
         }
 
-        p {
-            margin: 12px 0;
+        .callout-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            color: var(--accent);
         }
 
-        ul,
-        ol {
-            margin: 12px 0;
-            padding-left: 22px;
+        .callout.insight .callout-label { color: #2d6a4f; }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
         }
+
+        .comparison > div {
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: var(--accent-bg);
+        }
+
+        .comparison > div:last-child {
+            background: rgba(45, 106, 79, 0.06);
+        }
+
+        .comparison .col-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+        }
+
+        .comparison > div:first-child .col-label { color: var(--muted); }
+        .comparison > div:last-child .col-label { color: #2d6a4f; }
+
+        strong { color: #332a22; }
+        .muted { color: var(--muted); }
 
         .meta {
-            margin-bottom: 22px;
-            color: var(--muted);
-            font-size: 0.95rem;
-        }
-
-        .abstract,
-        .note {
-            padding: 16px 18px;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            background: #fffcf7;
-        }
-
-        .label {
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        .toc {
-            margin-top: 22px;
-            padding: 16px 18px;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            background: #fffdfa;
-        }
-
-        .toc p {
-            margin-top: 0;
-        }
-
-        a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .muted {
+            margin-top: 48px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            font-size: 0.9rem;
             color: var(--muted);
         }
 
         @media (max-width: 640px) {
-            main {
-                padding: 26px 18px 32px;
-            }
+            .page { padding: 28px 18px; }
+            .comparison { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <main>
-        <h1>基于生产环境行为轨迹的逻辑合成模型</h1>
-        <p class="meta">一则来自软件工程实践的研究假说</p>
+    <main class="page">
+        <p class="eyebrow">Deep Dive &middot; AI &amp; Software Engineering</p>
+        <h1>需求文档是错误的训练信号</h1>
+        <p class="subtitle">
+            Copilot、Cursor、Devin 都在用“需求&rarr;代码”的映射数据来训练大模型。<br>
+            但软件系统中真正决定生死存亡的逻辑，从未写在任何需求文档里。
+        </p>
 
-        <section class="abstract">
-            <p><span class="label">摘要</span></p>
-            <p>
-                当前生成式人工智能在软件工程中的训练方式，仍主要建立在“需求、文档、代码”这一组显式语义数据之上。
-                这种范式能够有效覆盖主干逻辑和局部实现问题，但对于大规模复杂系统中长期演化形成的隐式逻辑，
-                其表达能力和监督强度都存在明显不足。
-            </p>
-            <p>
-                本文从软件工程实践出发，提出一种研究假说：对于复杂系统而言，
-                决定其稳态的关键约束并不主要存在于需求文档中，而更多存在于生产环境长期施加的行为约束中。
-                因此，生产环境中的行为轨迹可能构成一种比传统需求描述更接近系统真实逻辑的监督信号。
-            </p>
-            <p>
-                基于此，本文提出“影子演化”这一概念性框架：在影子环境或沙盒环境中，
-                让候选实现持续拟合真实生产系统在相同输入下的行为表现，并以输出差异、状态差异、
-                性能指标和异常分布作为约束信号，逐步逼近原系统的隐式边界。
-                本文同时讨论该方向的适用场景、潜在价值及其工程约束。
-            </p>
-        </section>
+        <!-- ─── 开篇 ─── -->
+        <h2>软件系统逻辑的双重结构</h2>
+        <p>
+            从信息论的视角来看，任何工业级软件系统的逻辑都由两部分构成：显式逻辑与隐式逻辑。
+        </p>
+        <p>
+            <strong>显式逻辑（Explicit Logic）</strong>留存在需求规格说明书（PRD）、接口规范和代码注释中。
+            例如“订单支付成功后扣减库存”、“余额不足时返回 4003 状态码”。这类逻辑语义关联清晰，大语言模型（LLM）通过现有的开源代码和文档数据即可建立精确的映射。
+        </p>
+        <p>
+            <strong>隐式逻辑（Implicit Logic）</strong>则是深植于系统执行路径内部、应对真实物理负载与非理想网络时序的非显式约束，它构成了系统在复杂拓扑下的稳态基石。具体表现为两个维度：
+        </p>
+        <ul>
+            <li>
+                <strong>架构设计理念（Architectural Design Philosophy）</strong>：
+                属于高阶设计意图，通常仅由核心开发者掌握（如组件解耦边界、同步与异步的折衷处理），其习得过程伴随极高的信息损耗与沟通成本。
+            </li>
+            <li>
+                <strong>边界约束与自愈行为（Boundary Constraint Behaviors）</strong>：
+                极少在规范文档中体现，通常作为历史异常的补丁或防御性代码存在（如：自适应限流、分布式网络分区下的柔性补偿、指数退避重试等）。这类逻辑在系统规模扩大时呈指数级增长，表现为一种“必要冗余”：若缺失则导致职责边界失效甚至系统雪崩，若过度定义则导致系统复杂度熵增。
+            </li>
+        </ul>
+        <p>
+            这部分逻辑有着严密的物理空间规律，它们无法由业务产品逻辑进行正向推演，而是由无数次硬件、组件失效引发的生产事故共同铸就的工程结晶。
+        </p>
+        <p>
+            随着工程复杂度的增加，隐式逻辑的体量与重要性远超显式逻辑。然而，当前基于“文本&rarr;代码”的 AI 训练范式，几乎完全抛弃了这一关键维度的数据。
+        </p>
 
-        <nav class="toc" aria-label="目录">
-            <p><span class="label">目录</span></p>
-            <ol>
-                <li><a href="#background">问题背景</a></li>
-                <li><a href="#explicit-implicit">显式逻辑与隐式逻辑</a></li>
-                <li><a href="#limitations">传统语义范式的局限性</a></li>
-                <li><a href="#shadow-evolution">影子演化：基于生产轨迹的逻辑拟合</a></li>
-                <li><a href="#scenarios">适用场景与验证路径</a></li>
-                <li><a href="#constraints">工程约束与潜在风险</a></li>
-                <li><a href="#conclusion">结论</a></li>
-            </ol>
-        </nav>
+        <div class="callout">
+            <span class="callout-label">核心论点</span>
+            <p style="margin:0;">
+                基于“需求&rarr;代码”的训练模型存在结构性的盲区：它仅覆盖了系统的显式表达，而决定工程稳定性的隐式约束被剥离在外。
+                突破该瓶颈的路径在于：直接将<strong>生产环境的真实行为轨迹</strong>作为 AI 训练的原始对阶信号。
+            </p>
+        </div>
 
-        <section id="background">
-            <h2>一、问题背景</h2>
-            <p>
-                在复杂软件系统中，最容易被表达和复述的往往不是最关键的部分。主干业务流程、接口契约、
-                数据结构以及标准路径通常都可以被显式记录，因此也最容易被当前 AI 编码系统学习到。
-            </p>
-            <p>
-                但系统真正稳定运行所依赖的，并不只有这些显式逻辑。大量系统行为实际上由长期演化形成的隐式约束决定，
-                例如异常输入下的处理方式、跨模块边界的隐含契约、资源压力下的退化策略、历史兼容路径以及架构层面的非形式化设计原则。
-                这些内容通常难以被完整写入需求文档，也难以通过静态代码本身直接恢复。
-            </p>
-            <p>
-                这也是为什么当前 AI 系统在小规模、局部化任务上表现良好，但在复杂工程中经常出现“语义上合理、工程上失真”的问题。
-            </p>
-        </section>
+        <!-- ─── 问题分析 ─── -->
+        <h2>自然语言的语义表达带宽极限</h2>
+        <p>
+            为什么 AI 吸收了海量文档与代码集，却依然难以独立操刀企业级复杂工程？
+            根本原因在于自然语言存在严重的“信息有损压缩”。文字擅长描述标称路径（Happy Path）上的基础规则，但在以下三类隐式约束面前却显得捉襟见肘：
+        </p>
+        <ul>
+            <li><strong>高阶架构演进意图</strong>：为何在此处引入消息队列进行削峰？跨模块解耦背后的流量折衷是什么？这些随人员更迭而大量流失的工程上下文，难以形成文本。</li>
+            <li><strong>极端边界的防御与鲁棒性</strong>：拦截异常流量的兜底逻辑、填补第三方 API 缺陷的适配层处理。这些逻辑随系统迭代呈指数增长，文字无法进行极尽穷举。</li>
+            <li><strong>高频并发的时序对抗</strong>：锁资源抢占的竞态条件、分布式事务的最终一致性补偿。这些纯粹的物理层执行规律，极难通过高层抽象的自然语言无损转化为提示词（Prompt）。</li>
+        </ul>
+        <p>
+            过度拟合显式逻辑的模型，生成的代码往往在理想测试中畅通无阻，但在真实异常流量下迅速崩溃。
+            <strong>这并非大模型推理能力的薄弱，而是我们投喂的训练信号本身就存在残缺。</strong>
+        </p>
 
-        <section id="explicit-implicit">
-            <h2>二、显式逻辑与隐式逻辑</h2>
-            <h3>2.1 显式逻辑</h3>
-            <p>
-                显式逻辑是指那些可以被较低成本表达、审查和传递的系统知识，
-                例如需求说明、接口协议、主流程控制以及可以被文档化的结构性规则。
-                这部分内容构成了现有 AI 编码训练的主要语料来源。
-            </p>
+        <!-- ─── 核心洞见 ─── -->
+        <h2>向高维度的行为轨迹提取训练信号</h2>
+        <p>
+            DeepMind 在研发 AlphaZero 时的关键决策在于：摒弃了蕴含人类思维死角的传统残局棋谱，转而让 AI 直接通过纯粹的胜负结果进行自我博弈，
+            最终涌现出震撼人类的全新策略。
+        </p>
+        <p>
+            如果软件开发中的“需求文档”等同于残缺棋谱，那么软件工程里等价于“胜负结果”的最原始反馈究竟是什么？
+            答案是<strong>基于生产环境的真实行为轨迹（Behavioral Traces）</strong>。真实负载下的系统输入、输出、内存状态变更和调用链路追踪，绕过了人类低带宽语言的抽象过滤，完整记录了每一道隐式约束的物理表现。
+        </p>
 
-            <h3>2.2 隐式逻辑</h3>
-            <p>
-                隐式逻辑是指那些不易被显式表达、但对系统稳态至关重要的约束。
-                它通常表现为两类：
-            </p>
-            <ul>
-                <li>架构设计理念，例如模块分层原则、异步化决策、耦合边界以及某些看似冗余但实际必要的中间层设计。</li>
-                <li>边界约束行为，例如历史兼容、降级逻辑、故障转移策略、缓存保护机制以及极端流量下的行为收敛方式。</li>
-            </ul>
-            <p>
-                从工程经验看，项目规模越大，隐式逻辑的占比通常越高。这部分逻辑并非不存在，而是往往分散在长期运行的结果中，
-                体现在告警、异常、补丁、回滚记录和生产监控指标里。
-            </p>
-        </section>
+        <!-- ─── 方案 ─── -->
+        <h2>影子演化范式（Shadow Evolution Paradigm）</h2>
+        <p>
+            在该框架下，我们不再硬性指导大模型该如何组合代码语句，而是让其直接向线上系统“看齐”。这一闭环由三部分构成：
+        </p>
 
-        <section id="limitations">
-            <h2>三、传统语义范式的局限性</h2>
-            <p>
-                当前主流的 AI 编码训练方式，本质上仍以“需求或指令到代码”的映射为主要形式。
-                这类方法能够有效处理显式逻辑，但它默认了一个前提：人类可以通过有限语义，
-                足够完整地定义系统所需满足的约束。
-            </p>
-            <p>
-                这一前提在复杂系统中并不总是成立。自然语言具有低带宽和高损耗特征，
-                需求文档本质上是对现实约束的一次压缩。手工编码是在根据这份压缩后的描述构造系统，
-                AI 编码则是在根据这份描述猜测系统。只要监督信号主要来自显式表述，
-                模型就更容易学会“如何表达功能”，而不是“如何满足真实环境中的长期约束”。
-            </p>
-            <p>
-                因此，本文并不主张否定需求文档的价值，而是认为在复杂系统中，
-                需求文档不应被视为唯一或主要的监督来源。
-            </p>
-        </section>
+        <p><strong>1. 采录行为指纹（Behavioral Tracing）</strong></p>
+        <p>
+            借助生产环境的无损遥测与可观测性链路，采集每一次真实请求流、系统内部缓存状态瞬变，以及异常与超时事件。这为系统构建了一份脱离于语言解释的纯粹“物理执行快照”。
+        </p>
 
-        <section id="shadow-evolution">
-            <h2>四、影子演化：基于生产轨迹的逻辑拟合</h2>
-            <p>
-                基于上述观察，本文提出一个研究假说：如果复杂系统中的关键逻辑更多沉淀在运行时行为中，
-                那么生产环境中的行为轨迹可能比需求描述更接近系统真实逻辑。
-            </p>
-            <p>
-                所谓“影子演化”，是指在不影响真实生产写入的前提下，
-                于影子环境中运行候选实现，并使用与生产系统同维度的输入数据进行对比拟合。
-                在这一过程中，候选实现不以“复述需求”为目标，而以“逼近行为边界”为目标。
-            </p>
+        <p><strong>2. 沙盒博弈对齐（Sandbox Alignment）</strong></p>
+        <p>
+            将这些捕获的真实流量输入沙盒，要求 AI 在毫秒级延时内生成候选代码并执行。此处的唯一校验基准是：
+            <strong>AI 生成代码的执行输出及状态变迁，是否与线上生产系统的行为严丝合缝？</strong>代码语义形态隐退，行为与状态对齐成为第一性原理。
+        </p>
 
-            <h3>4.1 监督信号</h3>
-            <ul>
-                <li>相同输入条件下的输出差异</li>
-                <li>关键状态变化的一致性</li>
-                <li>性能指标差异，例如延迟、吞吐和资源使用</li>
-                <li>异常分布与长尾路径下的行为偏差</li>
-            </ul>
+        <p><strong>3. 隐式逻辑的自然涌现（Logic Emergence）</strong></p>
+        <p>
+            为了使得每一处微小的错误栈、每一轮重试时间的抖动都与物理表现一致，AI <strong>必须</strong>在对抗测试中，自发合成包含退避补偿、流控与死锁防御的代码拓扑。
+            隐式逻辑不再是一种需要理解的业务规则，而是其为了通过沙盒检验所必须服从的纯粹数学约束。
+        </p>
 
-            <h3>4.2 可能的结果</h3>
-            <p>
-                在这种框架下，隐式逻辑不再主要依赖人工显式传递，而是以约束的形式被模型持续感知。
-                模型未必会恢复出与原系统完全相同的内部结构，但有可能逐步恢复出一部分与原系统相容的结构性规律。
-            </p>
-        </section>
+        <div class="comparison">
+            <div>
+                <span class="col-label">文本 &rarr; 代码范式</span>
+                <p style="margin:4px 0;font-size:0.95rem;">信号源：人工撰写的需求与注释</p>
+                <p style="margin:4px 0;font-size:0.95rem;">覆盖域：表层的显式逻辑体系</p>
+                <p style="margin:4px 0;font-size:0.95rem;">数据瓶颈：高度依赖人工打标过滤</p>
+                <p style="margin:4px 0;font-size:0.95rem;">反馈域：极其稀疏的人工评审与报错</p>
+            </div>
+            <div>
+                <span class="col-label">行为 &rarr; 代码范式</span>
+                <p style="margin:4px 0;font-size:0.95rem;">信号源：生产环境行为轨迹数据</p>
+                <p style="margin:4px 0;font-size:0.95rem;">覆盖域：包含隐式约束的全物理表征</p>
+                <p style="margin:4px 0;font-size:0.95rem;">数据瓶颈：自然衍生、源源不断的数据流</p>
+                <p style="margin:4px 0;font-size:0.95rem;">反馈域：连续、高密度的数据对阶评估</p>
+            </div>
+        </div>
 
-        <section id="scenarios">
-            <h2>五、适用场景与验证路径</h2>
-            <p>
-                该方向并不适合直接在超大规模、多层耦合的平台上作为第一步验证。更现实的试验对象，
-                是那些业务闭环清晰、线上反馈充分、风险相对可控的中等复杂系统。
-            </p>
-            <p>
-                例如新闻 App、资讯推荐、内容聚合、搜索排序、缓存策略优化以及低风险服务重构等场景。
-                这些系统具有以下特点：
-            </p>
-            <ul>
-                <li>输入输出关系相对清晰</li>
-                <li>监控指标天然存在，便于定义行为差异</li>
-                <li>可以先进行影子比对，再进行小流量灰度，而非直接整体替换</li>
-            </ul>
-            <p>
-                因此，一个更可信的验证路径，不是“让 AI 一次性重写整个复杂平台”，
-                而是“让 AI 在影子环境中逐步接管可验证子系统”。
-            </p>
-        </section>
+        <!-- ─── 意义 ─── -->
+        <h2>工程革新与范式转换潜能</h2>
+        <ul>
+            <li><strong>粉碎数据枯竭的阻尼</strong>：庞大的并发集群每秒都在迭代海量的轨迹。它的信息丰度远非人工打标的“代码对”所能企及。</li>
+            <li><strong>昂贵工程经验的数字继承</strong>：架构团队利用多年教训及重大事故重构出的系统抗压能力，都隐写在行为轨迹内，直接对模型进行基因输送。</li>
+            <li><strong>终结无文档遗留系统的重构梦魇</strong>：面对无人敢于触碰的核心系统，无需破译陈旧源码语法，只需全量录制系统流转轨迹，即可通过“影子演化”合成具备现代架构并保持行为等价的新引擎。</li>
+        </ul>
 
-        <section id="constraints">
-            <h2>六、工程约束与潜在风险</h2>
-            <p>
-                尽管这一方向具有吸引力，但它并不是没有代价的。
-                若将其作为严肃研究问题，需要至少面对以下约束：
-            </p>
-            <ul>
-                <li>生产行为数据的采集、脱敏、回放和状态对齐成本很高。</li>
-                <li>线上指标并不完备，无法天然等价于“系统正确性”。</li>
-                <li>存在 Goodhart 风险，即模型可能过度优化可见指标而偏离真实目标。</li>
-                <li>长尾错误和极端边界路径仍然难以被充分覆盖。</li>
-                <li>并非所有系统都具备足够的可观测性和可回放性。</li>
-            </ul>
-            <p>
-                因此，本文更倾向于将这一方向描述为一种值得验证的工程研究路径，而不是已经闭合的通用方法论。
-            </p>
-        </section>
+        <!-- ─── 约束 ─── -->
+        <h2>落地挑战与当前工程边界</h2>
+        <ul>
+            <li><strong>行为等效不等于全路径覆盖</strong>：生成的代码在录制轨迹中表现完美，仍有未覆盖链路的过拟合风险。引入混沌工程（Chaos Engineering）与严格的形式验证势在必行。</li>
+            <li><strong>数据的隐私阻断墙</strong>：不可避免涉及敏感数据的生产流量在导入沙盒闭环前，必须进行安全脱敏及特征保留，这对安全基建要求极高。</li>
+            <li><strong>算力消耗的时空扭曲</strong>：相对于训练静态标注集，采用海量沙盒动态执行的闭包含义及对抗评估，会给现有算力及调度系统形成巨大的压力。</li>
+        </ul>
+        <p>
+            但这些，终究只是技术发展中必须攀越的工程屏障，而非逻辑演绎上的最终死局。
+        </p>
 
-        <section id="conclusion">
-            <h2>七、结论</h2>
-            <p>
-                当前 AI 编码系统的主要优势，在于学习显式逻辑及其语义表达方式；
-                但复杂系统真正依赖的，往往是长期运行中沉淀下来的隐式逻辑。
-                如果这一判断成立，那么 AI 编码的下一阶段，可能不仅是模型规模的扩张，
-                更是监督信号来源的改变。
-            </p>
-            <p>
-                从这个意义上说，生产环境中的行为轨迹不应仅被视为运维数据，
-                它也可能是一种更接近系统真实逻辑的高价值监督信号。
-                对复杂软件工程而言，这或许是从“语义模仿”走向“行为对齐”的一个可能方向。
-            </p>
-        </section>
+        <!-- ─── 结尾 ─── -->
+        <p>
+            那些决定系统生死存亡的隐式约束逻辑，在每一个午夜或流量巅峰中无声运转并持续流淌。<br>
+            并非大型模型缺乏缔造卓越生产代码的智慧，只是长久以来，我们在错误的坐标系上抛洒着算力。
+        </p>
 
-        <section class="note">
-            <p><span class="label">说明</span></p>
-            <p class="muted">
-                本文是一则来自软件工程实践的研究假说，而非训练技术论文。
-                其目标在于提出问题、界定边界，并指出一个值得进一步形式化和实验验证的方向。
-            </p>
-        </section>
+        <div class="meta">
+            <p>作者：shixiangxi &middot; 2026 年 4 月</p>
+        </div>
     </main>
 </body>
 </html>
