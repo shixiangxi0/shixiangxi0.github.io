@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>shixiangxi0.github.io</title>
-    <meta name="description" content="shixiangxi0 的 GitHub Pages 首页。">
+    <title>基于生产环境行为轨迹的逻辑合成模型</title>
+    <meta
+        name="description"
+        content="一篇关于基于生产环境行为轨迹、影子演化范式与隐式逻辑合成的文章。"
+    >
     <style>
         :root {
             color-scheme: light;
-            --bg: #f4efe8;
-            --card: rgba(255, 251, 245, 0.9);
-            --text: #1f1c18;
-            --muted: #685f56;
-            --accent: #b85a3b;
-            --line: rgba(31, 28, 24, 0.12);
+            --bg: #f6f1e8;
+            --paper: #fffaf2;
+            --text: #1f1b16;
+            --muted: #6d6459;
+            --line: rgba(31, 27, 22, 0.12);
+            --accent: #9f4d31;
+            --shadow: 0 24px 60px rgba(74, 52, 32, 0.12);
         }
 
         * {
@@ -22,70 +26,182 @@
 
         body {
             margin: 0;
-            min-height: 100vh;
-            display: grid;
-            place-items: center;
-            padding: 24px;
+            padding: 32px 16px 56px;
             color: var(--text);
             background:
-                radial-gradient(circle at top left, rgba(233, 170, 113, 0.35), transparent 28%),
-                linear-gradient(180deg, #f5efe6 0%, var(--bg) 100%);
+                radial-gradient(circle at top left, rgba(231, 180, 132, 0.26), transparent 24%),
+                linear-gradient(180deg, #f8f3eb 0%, var(--bg) 100%);
             font-family: "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            line-height: 1.85;
         }
 
-        .card {
-            width: min(720px, 100%);
-            padding: 40px 32px;
+        .page {
+            width: min(920px, 100%);
+            margin: 0 auto;
+            padding: 40px 28px;
             border: 1px solid var(--line);
             border-radius: 28px;
-            background: var(--card);
-            box-shadow: 0 24px 60px rgba(68, 44, 24, 0.12);
+            background: var(--paper);
+            box-shadow: var(--shadow);
         }
 
         .eyebrow {
-            margin: 0 0 12px;
-            color: var(--muted);
+            margin: 0 0 10px;
+            color: var(--accent);
             font-size: 0.82rem;
+            font-weight: 700;
             letter-spacing: 0.14em;
             text-transform: uppercase;
         }
 
+        h1,
+        h2 {
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1.2;
+        }
+
         h1 {
             margin: 0;
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: clamp(2.4rem, 8vw, 4.5rem);
-            line-height: 1.08;
+            font-size: clamp(2.3rem, 5vw, 3.6rem);
+        }
+
+        h2 {
+            margin: 36px 0 12px;
+            font-size: 1.8rem;
+        }
+
+        p,
+        li {
+            font-size: 1.05rem;
         }
 
         p {
-            margin: 18px 0 0;
-            font-size: 1.08rem;
-            line-height: 1.75;
+            margin: 14px 0;
+        }
+
+        ul {
+            margin: 12px 0;
+            padding-left: 22px;
+        }
+
+        .summary {
+            margin-top: 22px;
+            padding: 18px 20px;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 16px 16px 0;
+            background: rgba(159, 77, 49, 0.06);
+        }
+
+        .label {
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        strong {
+            color: #332a22;
         }
 
         .muted {
             color: var(--muted);
         }
 
-        a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        a:hover {
-            text-decoration: underline;
+        @media (max-width: 640px) {
+            .page {
+                padding: 28px 18px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Minimal root site for GitHub Pages -->
-    <main class="card">
-        <p class="eyebrow">GitHub Pages</p>
-        <h1>shixiangxi0.github.io</h1>
-        <p>这是一个简单展示页，后面可以继续扩展成博客、个人主页或项目导航站。</p>
-        <p class="muted">如果你现在能看到这个页面，说明根地址已经正确指向这个仓库。</p>
-        <p><a href="https://github.com/shixiangxi0/shixiangxi0.github.io">查看 GitHub 仓库</a></p>
+    <main class="page">
+        <p class="eyebrow">Research Note</p>
+        <h1>基于生产环境行为轨迹的逻辑合成模型</h1>
+
+        <div class="summary">
+            <p><span class="label">摘要（Abstract）</span></p>
+            <p>
+                当前生成式人工智能（AIGC）在软件工程领域的应用主要受限于高质量标注数据的稀缺。
+                现有的监督微调（SFT）模式高度依赖于“显式规则”即需求文档与核心代码的语义映射，
+                但这仅涵盖了系统逻辑的有限子集。对于大规模复杂工程而言，决定其稳态的“隐式逻辑”
+                往往由于其不可观测性而难以被现有的语义模型捕获。
+            </p>
+            <p>
+                本文旨在提出一种 <strong>“影子演化范式”（Shadow Evolution Paradigm）</strong>。
+                该范式主张摒弃传统的“需求-代码”指令序列，直接利用生产环境产生的实时行为轨迹作为反馈信号。
+                通过在具备状态存根的沙盒环境中进行高频迭代，使 AI 模型在拟合真实比特流的过程中，
+                自动实现隐式逻辑的涌现与代码实体的合成。
+            </p>
+        </div>
+
+        <h2>一、软件系统的双重逻辑构成</h2>
+        <p>
+            从信息论视角分析，软件系统的逻辑完整性由两部分组成：
+        </p>
+        <p>
+            <strong>显式逻辑（Explicit Logic）</strong>：表现为规格说明书、需求文档及标称路径下的核心逻辑。
+            此类逻辑具备高度的可访问性，开发者可在较低的认知负荷下通过静态代码阅读获取。
+            目前 AI 编程训练集主要由该类显式数据构成。
+        </p>
+        <p>
+            <strong>隐式逻辑（Implicit Logic）</strong>：深度嵌入在系统执行路径中的非显式约束，具体表现为：
+        </p>
+        <ul>
+            <li>
+                <strong>架构设计理念（Architectural Design Philosophy）</strong>：
+                属于高阶设计意图，通常仅由核心开发者掌握，其习得过程伴随极高的信息损耗与时间成本。
+            </li>
+            <li>
+                <strong>边界约束行为（Boundary Constraint Behaviors）</strong>：
+                极少在规范文档中体现，通常作为历史异常的补丁存在。这类逻辑在系统规模扩大时呈指数级增长，
+                表现为一种“必要冗余”：若缺失则导致职责边界失效，若过度定义则导致系统复杂度熵增。
+            </li>
+        </ul>
+
+        <h2>二、语义范式的局限性与需求命题的重审</h2>
+        <p>
+            在传统软件工程（Software 1.0）及 AI 辅助编程（Software 2.0）中，“需求”被视为逻辑合成的起始算子。
+            然而，由于人类自然语言的低带宽特性，需求文档本质上是对复杂逻辑的有损压缩。
+        </p>
+        <p>
+            当项目规模跨越特定阈值后，隐式逻辑的占比将超过显式逻辑。此时，依赖“需求-代码”映射生成的代码
+            将面临严重的逻辑一致性风险。因此，重新审视需求定义的客观性，并寻找更原始的逻辑来源，
+            成为实现全自动化重构的技术前提。
+        </p>
+
+        <h2>三、影子演化：基于生产轨迹的闭环反馈模型</h2>
+        <p>
+            为解决隐式逻辑的捕获难题，本研究提出一种基于物理运行轨迹的对标模型。
+        </p>
+
+        <p><strong>3.1 行为轨迹采集（Behavioral Trace Acquisition）</strong></p>
+        <p>
+            利用生产环境的遥测机制，如全量指标、I/O 轨迹及指令流采样，记录系统在处理真实负载时的行为指纹。
+            这些数据作为系统运行的原始观测值，绕过了人类语义的干扰，直接反应了逻辑在物理世界的映射。
+        </p>
+
+        <p><strong>3.2 沙盒环境下的逻辑拟合（Logic Fitting in Sandbox）</strong></p>
+        <p><strong>输入：</strong>相同维度的生产环境输入数据。</p>
+        <p>
+            <strong>目标：</strong>最小化候选代码与原始系统在输出响应及状态变更上的
+            KL 散度（Kullback-Leibler Divergence）。
+        </p>
+
+        <p><strong>3.3 逻辑自涌现与架构坍缩</strong></p>
+        <p>
+            在该闭环内，隐式逻辑不再作为“待理解”的知识，而是作为“必须满足”的数学约束。
+            AI 为了在边界条件下达成与原系统一致的比特流表现，必须自动合成出符合原架构理念与边界约束的代码结构。
+        </p>
+
+        <h2>四、结论与工程约束</h2>
+        <p>
+            尽管该范式对运维基础设施的构建、数据脱敏技术以及大规模并行算力提出了严苛的工程要求，
+            但它从根本上解决了 AI 无法触达软件“灵魂”的难题。通过将生产环境数据直接引入编码训练，
+            软件工程有望从“语义模仿”阶段跨越至“行为克隆”阶段。
+        </p>
+
+        <p class="muted">
+            本页为静态展示版本，可继续扩展为完整论文页、博客文章页或带目录导航的长文站点。
+        </p>
     </main>
 </body>
 </html>
