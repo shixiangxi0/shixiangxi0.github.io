@@ -1,12 +1,17 @@
 # shixiangxi0.github.io
 
-Minimal GitHub Pages site for:
+Personal site & blog hosted on GitHub Pages.
 
-`https://shixiangxi0.github.io/`
+## Structure
 
-Only these are needed:
+```
+/                        → redirect to /about/
+/about/                  → author page
+/shadow-evolution/cn/    → AI 编程：生产环境是被忽视的训练信号（中文）
+/shadow-evolution/en/    → AI Coding: Production Is the Overlooked Training Signal (English)
+```
 
-1. Repository name: `shixiangxi0.github.io`
-2. Repository visibility: `Public`
-3. A root `index.html`
-4. `Settings -> Pages -> Deploy from a branch -> main -> /(root)`
+## Setup
+
+1. Repository: `shixiangxi0.github.io` (public)
+2. Settings → Pages → Deploy from branch → `main` → `/(root)`

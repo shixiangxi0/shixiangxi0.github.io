@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>石祥熙 / Xiangxi Shi</title>
+    <style>
+        :root {
+            --bg: #f6f1e8;
+            --paper: #fffaf2;
+            --text: #1f1b16;
+            --muted: #6d6459;
+            --line: rgba(31, 27, 22, 0.12);
+            --accent: #9f4d31;
+            --shadow: 0 24px 60px rgba(74, 52, 32, 0.12);
+        }
+
+        * { box-sizing: border-box; margin: 0; }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 32px 16px;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(231, 180, 132, 0.26), transparent 24%),
+                linear-gradient(180deg, #f8f3eb 0%, var(--bg) 100%);
+            font-family: "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            line-height: 1.8;
+        }
+
+        .card {
+            width: min(460px, 100%);
+            padding: 48px 40px;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            background: var(--paper);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        h1 {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 2rem;
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+
+        .en-name {
+            font-size: 1.05rem;
+            color: var(--muted);
+            margin-bottom: 28px;
+        }
+
+        .divider {
+            width: 40px;
+            height: 1px;
+            background: var(--line);
+            margin: 0 auto 24px;
+        }
+
+        .info {
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .info a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .info a:hover {
+            text-decoration: underline;
+        }
+
+        .row {
+            margin: 10px 0;
+        }
+
+        .label {
+            display: inline;
+            font-size: 0.8rem;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+        }
+
+        .links {
+            margin-top: 28px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+        }
+
+        .links a {
+            color: var(--accent);
+            text-decoration: none;
+            padding: 6px 0;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .links a:hover {
+            border-bottom-color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>石祥熙</h1>
+        <div class="en-name">Xiangxi Shi</div>
+        <div class="divider"></div>
+        <div class="info">
+            <div class="row">
+                <span class="label">Email</span>&ensp;
+                <a href="mailto:sx69517@gmail.com">sx69517@gmail.com</a>
+            </div>
+            <div class="row">
+                <span class="label">GitHub</span>&ensp;
+                <a href="https://github.com/shixiangxi0" target="_blank" rel="noopener">shixiangxi0</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
