@@ -7,8 +7,8 @@ Personal site & blog hosted on GitHub Pages.
 ```
 /                        → redirect to /about/
 /about/                  → author page
-/shadow-evolution/cn/    → AI 编程：生产环境是被忽视的训练信号（中文）
-/shadow-evolution/en/    → AI Coding: Production Is the Overlooked Training Signal (English)
+/shadow-evolution/cn/    → AI 编程：生产环境藏着被忽视的训练信号（中文）
+/shadow-evolution/en/    → AI Coding: The Overlooked Training Signal Lives in Production (English)
 ```
 
 ## Setup

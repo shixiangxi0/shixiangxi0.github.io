@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Coding: Production Is the Overlooked Training Signal</title>
+    <title>AI Coding: The Overlooked Training Signal Lives in Production</title>
     <meta name="description" content="Current AI coding training corpora cover only explicit logic, while the implicit constraints that sustain industrial-grade system availability are entirely discarded. The Shadow Evolution Paradigm proposes using real behavioral traces from production environments as the raw training signal for large models.">
-    <meta property="og:title" content="AI Coding: Production Is the Overlooked Training Signal">
+    <meta property="og:title" content="AI Coding: The Overlooked Training Signal Lives in Production">
     <meta property="og:description" content="Current AI coding training corpora cover only explicit logic, while the implicit constraints that sustain industrial-grade system availability are entirely discarded. The Shadow Evolution Paradigm proposes using real behavioral traces from production environments as the raw training signal for large models.">
     <meta property="og:type" content="article">
     <style>
@@ -182,7 +182,7 @@
 
 <body>
     <main class="page">
-        <h1>AI Coding: Production Is the Overlooked Training Signal</h1>
+        <h1>AI Coding: The Overlooked Training Signal Lives in Production</h1>
         <p class="subtitle">
             Today&rsquo;s frontier AI labs rely primarily on static &ldquo;text instruction &rarr; code&rdquo; mappings and constrained unit tests as training signals for large models.<br>
             Yet the implicit constraints that truly sustain industrial-grade systems through physical traffic surges and ensure high availability cannot be exhaustively captured by conventional documentation and test cases.
@@ -268,7 +268,7 @@
         <p>
             Feed captured real traffic into a sandbox, requiring AI to generate candidate code and execute it. The sole validation criterion is:
             <strong>Does the execution output and state transition of AI-generated code precisely match the behavior of the live production system?</strong> Code&rsquo;s semantic form becomes secondary; behavioral and state alignment becomes the first principle.
-            Shadow traffic testing is already standard practice in SRE and full-link stress testing. Tools like Diffy (open-sourced by Twitter) perform traffic replay and behavioral comparison daily. Connecting this to LLM code generation capabilities is an engineering integration, not a technological invention.
+            Shadow traffic testing is already standard practice in SRE and full-link stress testing. Tools like Diffy (open-sourced by Twitter) continuously perform traffic replay and behavioral comparison. Connecting this to LLM code generation capabilities is an engineering integration, not a technological invention.
         </p>
 
         <p><strong>3. Logic Emergence</strong></p>
@@ -298,13 +298,13 @@
         <h2>Engineering Innovation &amp; Paradigm Shift Potential</h2>
         <ul>
             <li><strong>Breaking through the data bottleneck</strong>: Massive concurrent clusters generate enormous volumes of traces every second. Their information richness far surpasses what manually annotated &ldquo;code pairs&rdquo; can achieve.</li>
-            <li><strong>Digital transfer of engineering experience</strong>: The system resilience forged by architecture teams through years of lessons and major incident reconstructions is encoded in behavioral traces&mdash;and can be directly transferred to the model.</li>
+            <li><strong>Digital transfer of engineering experience</strong>: The system resilience forged by architecture teams through years of lessons and major incidents is encoded in behavioral traces&mdash;and can be directly transferred to the model.</li>
             <li><strong>Lowering the refactoring barrier for undocumented legacy systems</strong>: For core systems that have long lacked maintainers, instead of deciphering archaic source code line by line, simply record full system operation traces and generate a replacement implementation with modern architecture and behavioral equivalence through Shadow Evolution.</li>
         </ul>
 
         <h2>Implementation Challenges &amp; Current Engineering Boundaries</h2>
         <ul>
-            <li><strong>Behavioral equivalence &ne; full path coverage</strong>: Code that performs perfectly on recorded traces still risks overfitting to uncovered paths. Incorporating Chaos Engineering and rigorous formal verification is imperative.</li>
+            <li><strong>Behavioral equivalence &ne; full path coverage</strong>: Code that performs perfectly on recorded traces still risks overfitting to those traces and failing to generalize to uncovered paths. Incorporating Chaos Engineering and rigorous formal verification is imperative.</li>
             <li><strong>Data privacy barriers</strong>: Production traffic inevitably involves sensitive data and must undergo security anonymization while preserving statistical characteristics before entering the sandbox loop&mdash;demanding extremely high security infrastructure standards.</li>
             <li><strong>Dramatic compute cost escalation</strong>: Compared to training on static annotated datasets, massive sandbox dynamic execution and continuous adversarial evaluation impose orders-of-magnitude pressure on existing compute and scheduling infrastructure.</li>
         </ul>
@@ -317,7 +317,7 @@
             Previously, this paradigm lacked the engineering foundations for practical implementation: distributed tracing had not yet been standardized, traffic recording tools were confined to a handful of tech giants, lightweight sandbox startup costs could not support large-scale real-time adversarial evaluation, and reinforcement learning training frameworks were still immature.
         </p>
         <p>
-            Today, the infrastructure underpinning all three stages&mdash;observability platforms (OpenTelemetry, SkyWalking), traffic recording/replay (GoReplay, Sharingan), container orchestration and lightweight VMs (Kubernetes, Firecracker), and reinforcement learning frameworks (RLHF/GRPO pipelines)&mdash;has reached industrial-grade maturity. The technology stack across each stage is no longer the bottleneck.
+            Today, the infrastructure underpinning each stage&mdash;observability platforms (OpenTelemetry, SkyWalking), traffic recording/replay (GoReplay, Sharingan), container orchestration and lightweight VMs (Kubernetes, Firecracker), and reinforcement learning frameworks (RLHF/GRPO pipelines)&mdash;has reached industrial-grade maturity. The technology stack across each stage is no longer the bottleneck.
         </p>
         <p>
             What truly needs to shift is the mindset: from &ldquo;teaching AI to write code with static text&rdquo; to &ldquo;letting AI evolve code through physical traces.&rdquo;
