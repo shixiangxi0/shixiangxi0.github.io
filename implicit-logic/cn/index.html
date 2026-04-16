@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>显式逻辑与隐式逻辑：AI 时代软件工程的范式雏形</title>
+    <meta name="description" content="AI写的代码过了CI，却无法搞定生产环境。从这个朴素困惑出发，推导出一条关于未来AI训练范式与下一代软件工程的猜想。">
+    <meta property="og:title" content="显式逻辑与隐式逻辑：AI 时代软件工程的范式雏形">
+    <meta property="og:description" content="AI写的代码过了CI，却无法搞定生产环境。从这个朴素困惑出发，推导出一条关于未来AI训练范式与下一代软件工程的猜想。">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans-webfont/misans-style.css" />
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f6f1e8;
+            --paper: #fffaf2;
+            --text: #1f1b16;
+            --muted: #6d6459;
+            --line: rgba(31, 27, 22, 0.12);
+            --accent: #9f4d31;
+            --accent-bg: rgba(159, 77, 49, 0.06);
+            --shadow: 0 24px 60px rgba(74, 52, 32, 0.12);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 32px 16px 56px;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(231, 180, 132, 0.26), transparent 24%),
+                linear-gradient(180deg, #f8f3eb 0%, var(--bg) 100%);
+            font-family: "MiSans", "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            line-height: 1.85;
+        }
+
+        .page {
+            width: min(920px, 100%);
+            margin: 0 auto;
+            padding: 48px 36px;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            background: var(--paper);
+            box-shadow: var(--shadow);
+        }
+
+        h1, h2 {
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1.2;
+        }
+
+        h1 { margin: 0 0 8px; font-size: clamp(2rem, 5vw, 3.2rem); }
+
+        .subtitle {
+            margin: 0 0 28px;
+            font-size: 1.15rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        h2 { margin: 44px 0 14px; font-size: 1.7rem; }
+
+        p, li { font-size: 1.05rem; }
+        p { margin: 14px 0; }
+        ul, ol { margin: 12px 0; padding-left: 22px; }
+        ol li { margin: 8px 0; }
+
+        blockquote {
+            margin: 24px 0;
+            padding: 20px 24px;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 16px 16px 0;
+            background: var(--accent-bg);
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        blockquote p { margin: 8px 0; }
+
+        .callout {
+            margin: 24px 0;
+            padding: 20px 24px;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 16px 16px 0;
+            background: var(--accent-bg);
+        }
+
+        .callout.insight {
+            border-left-color: #2d6a4f;
+            background: rgba(45, 106, 79, 0.06);
+        }
+
+        .callout-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            color: var(--accent);
+        }
+
+        .callout.insight .callout-label { color: #2d6a4f; }
+
+        .deduction {
+            margin: 24px 0;
+            padding: 24px 28px;
+            border-radius: 16px;
+            background: rgba(45, 106, 79, 0.06);
+            border: 1px solid rgba(45, 106, 79, 0.15);
+        }
+
+        .deduction ol { margin: 12px 0 0; padding-left: 24px; }
+        .deduction li { margin: 10px 0; line-height: 1.7; }
+
+        strong { color: #332a22; }
+        .muted { color: var(--muted); }
+
+        .meta {
+            margin-top: 48px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .meta a { color: var(--accent); text-decoration: none; }
+        .meta a:hover { text-decoration: underline; }
+
+        @media (max-width: 640px) {
+            .page { padding: 28px 18px; }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <h1>显式逻辑与隐式逻辑：AI 时代软件工程的范式雏形</h1>
+        <p class="subtitle">
+            这篇文章的起点，是一个再普通不过的线上故障：AI 写的代码过了 CI，却无法搞定生产环境。<br>
+            从那个困惑出发，我试着把问题想清楚。
+        </p>
+
+        <blockquote>
+            <p>如果所有可验证的环境是对的，那它就是对的。如果它能在真实线上环境中经受住考验，那它就能被用于真实线上环境。</p>
+            <p>把一个简陋版本的抖音托进一个沙盒环境，用真实的线上数据去不断验证——用 HTTP 请求、网络安全测试、线上的真实观测指标来约束它的行为，让其在一个最小独立单元中不断更新代码、配置、数据，最终可以得到一个能写出真实抖音 App 的 AI。</p>
+        </blockquote>
+
+        <!-- ─── 显式与隐式 ─── -->
+        <h2>显式逻辑与隐式逻辑</h2>
+        <p>
+            从信息论的视角来看，任何工业级软件系统的逻辑都由两部分构成：显式逻辑与隐式逻辑。
+        </p>
+        <p>
+            <strong>显式逻辑</strong>：AI 能轻易读到、学会的东西。需求文档、API 定义、代码规范、测试用例——任何能写成文字、放进训练集的东西，都是显式逻辑。
+        </p>
+        <p>
+            <strong>隐式逻辑</strong>：深植于系统执行路径内部、应对真实物理负载与非理想网络时序的约束，它构成了系统在复杂拓扑下的稳态基石。具体表现为两个维度：
+        </p>
+        <ul>
+            <li><strong>架构设计理念（Architectural Design Philosophy）</strong>：属于高阶设计意图，通常仅由核心开发者掌握，其传承过程伴随极高的信息损耗与沟通成本。</li>
+            <li><strong>边界约束与自愈行为（Boundary Constraint Behaviors）</strong>：极少在规范文档中体现，通常作为历史异常的补丁或防御性代码存在（如：自适应限流、分布式网络分区下的柔性补偿、指数退避重试等）。这类逻辑在系统规模扩大时呈指数级增长，表现为一种"必要冗余"：若缺失则导致级联故障甚至系统雪崩，若过度定义则导致系统复杂度熵增。</li>
+        </ul>
+
+        <!-- ─── AI 的局限 ─── -->
+        <h2>AI 编程的局限性</h2>
+        <p>
+            现在的 AI 训练，本质上是一场盛大的显式逻辑灌输仪式，是传统开发中"需求→代码"的体现。我们用海量的需求文档、问答对、代码片段，教会 AI 怎么写出一段"看起来正确"的代码。然后我们评估它，用的也是显式逻辑的尺子——代码能不能跑通、有没有语法错误、是不是符合需求描述。
+        </p>
+        <p>
+            但这把尺子，量不出隐式逻辑。
+        </p>
+        <p>
+            当前的 AI 不知道什么是内存碎片，不知道什么是连接池耗尽，不知道什么是冷启动的毛刺。因为这些知识，从来不在训练数据里。它们在线上环境的每一次告警里，在那些"不知道为什么但是重启一下就好了"的经验里。
+        </p>
+        <p>
+            这也是为什么你让 AI 生成一个全量代码工程，可以在测试环境中跑通，但是一旦到了线上就崩溃。
+        </p>
+
+        <!-- ─── 推导 ─── -->
+        <h2>工程师思维下的推论</h2>
+        <p>AI 需要学习规则，才能生成正确的东西。</p>
+
+        <div class="deduction">
+            <ol>
+                <li>规则有两种：能写出来的（显式逻辑），和写不出来、只能在运行中显现的（隐式逻辑）。</li>
+                <li>当前 AI 训练，几乎只灌显式逻辑。</li>
+                <li>显式逻辑灌到一定程度，边际效益递减。因为决定线上存活的，是隐式逻辑。</li>
+                <li>隐式逻辑，几乎只存在于线上环境。</li>
+                <li><strong>因此，AI 训练的未来方向，必然是把线上环境变成一个 AI 可以感知、可以从中学习的"连续性数据流"。</strong></li>
+                <li>这意味着，我们需要打通代码编写和线上运维。程序员和运维，在 AI 原生时代，必须合二为一。</li>
+                <li>如果 AI 仅需要线上环境的连续性数据就能涌现出更强大的智能，这是否意味着，我们以前都陷入了"需求→代码"的思维误区？因为人类的需求本身是降维的，不能够真正涵盖现实世界的所有最小所需逻辑，所以直接拟合线上真实数据才是正解？AI 不需要需求，或者说不需要碎片式的需求？只要让它拟合真实世界，那么最后得出来的东西必然包含了这个需求？</li>
+            </ol>
+        </div>
+
+        <!-- ─── 收益 ─── -->
+        <h2>收益</h2>
+        <ul>
+            <li>这将是 DevOps 的终极形态，软件工程最理想的运行时。开发、测试、部署、监控不再是分离的阶段，而是一个连续的反馈回路。</li>
+            <li>消除了“训练集”和“真实世界”之间的分布偏移。AI 训练的数据就是生产环境的数据，不存在“训完发现线上不一样”的问题。</li>
+            <li>无需额外的上下文接入，生产环境（一个巨大的容器 AI 编排平台）本身就是一个统一的上下文，所有指标、数据随时取用。</li>
+            <li>AI 在容器平台中学习，隐式逻辑会不断涌现。</li>
+            <li>解决了 AI 训练中的高质量数据搜集问题——有明确的输入输出，明确的观测指标，AI 生成的代码在观测指标中循环迭代，解决隐式逻辑问题，最终达到生产环境可用。</li>
+            <li>工程师和研究者的生产环境将被统一。同一套容器平台既是工程师的运行时，也是研究者的实验场。</li>
+            <li>软件工程会变成一个不断自我进化的个体。</li>
+        </ul>
+
+        <!-- ─── 方案 ─── -->
+        <h2>解决思路</h2>
+        <p>
+            上述愿景虽然美好，但挑战依然艰巨。不过它们本质上属于算力与基建层面的工程架构问题，而非根本性的理论障碍。
+        </p>
+        <p>
+            整体思路是一条数据驱动的闭环链路：线上流量被录制并缓存，注入到一个与生产环境同构的 AI 沙盒中；AI 在沙盒里生成代码并运行；可观测性平台持续采集沙盒中的行为指标（延迟、错误率、资源利用率等），与真实项目的基线对比；偏差形成奖励信号，驱动 AI 迭代代码。这个循环不断运转，直到沙盒中的行为指标收敛到生产级标准。
+        </p>
+        <p>
+            传统开发时代，这一范式缺乏工程落地的基础条件。但目前的云原生时代，大部分痛点已经得到解决。上述各环节所依赖的基础设施——可观测性平台（OpenTelemetry、SkyWalking）、流量录制回放（GoReplay、Sharingan）、容器编排与轻量级虚拟机（Kubernetes、Firecracker）以及强化学习框架（RLHF/GRPO pipeline）——均已具备工业级成熟度。各环节的技术栈不再是瓶颈。
+        </p>
+        <p>
+            参考 AlphaZero 自我博弈的思路，我提出影子演化范式作为一种解决尝试。
+        </p>
+
+        <!-- ─── 影子演化 ─── -->
+        <h2>影子演化范式（Shadow Evolution Paradigm）</h2>
+        <p>
+            核心思想很简单：给 AI 建一个和生产环境同构的沙盒，让它在里面“活”“学”“进化”。
+        </p>
+        <p>
+            具体来说：AI 沙盒环境与真实项目环境共用一套容器基础设施（同样的网络拓扑、同样的资源限制、同样的可观测性采集）。AI 只被告知显式逻辑，生成第一版代码并部署到沙盒中。然后，真实项目的录制流量被回放进沙盒，可观测性平台实时对比沙盒与生产的行为差异——延迟分布、错误率、吞吐量、资源消耗——这些偏差构成奖励信号，驱动 AI 迭代代码。
+        </p>
+        <p>
+            这个过程持续运转：AI 不断修改代码、配置和数据，沙盒中的行为指标逐步逼近生产环境的基线。当两者的观测指标收敛到可接受的阈值时，沙盒中的代码就是生产级的。在这个过程中，没有人显式地教 AI 怎么处理连接池耗尽、怎么做级联熔断——这些隐式逻辑是它自己从生产数据的反馈中演化出来的。
+        </p>
+
+        <!-- ─── 结尾 ─── -->
+        <h2>写在最后</h2>
+        <p>
+            这篇文章的起点，是一个再普通不过的线上故障：AI 写的代码过了 CI，却无法搞定生产环境。
+        </p>
+        <p>
+            从那个故障出发，我试着把困惑想清楚。于是有了"显式逻辑"和"隐式逻辑"这对概念。于是有了那条推导链条。于是有了一个关于未来 AI 训练范式以及下一代软件工程的猜想。
+        </p>
+        <p>
+            写到这里，我并没有发明任何新的技术，也没有跑通任何一个实验。我只是把一个工程师面对系统运行时的朴素困惑，变成了一套勉强闭环的语言。
+        </p>
+
+        <div class="meta">
+            <p>作者：<a href="/about/">石祥熙</a> &middot; 2026 年 4 月</p>
+        </div>
+    </main>
+</body>
+
+</html>

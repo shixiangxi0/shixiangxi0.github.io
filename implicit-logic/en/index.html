@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicit vs. Implicit Logic: A Paradigm Sketch for Software Engineering in the AI Era</title>
+    <meta name="description" content="AI-generated code passed CI but couldn't survive production. Starting from that simple frustration, an engineer's deduction chain toward a new AI training paradigm and the next generation of software engineering.">
+    <meta property="og:title" content="Explicit vs. Implicit Logic: A Paradigm Sketch for Software Engineering in the AI Era">
+    <meta property="og:description" content="AI-generated code passed CI but couldn't survive production. Starting from that simple frustration, an engineer's deduction chain toward a new AI training paradigm and the next generation of software engineering.">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans-webfont/misans-style.css" />
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f6f1e8;
+            --paper: #fffaf2;
+            --text: #1f1b16;
+            --muted: #6d6459;
+            --line: rgba(31, 27, 22, 0.12);
+            --accent: #9f4d31;
+            --accent-bg: rgba(159, 77, 49, 0.06);
+            --shadow: 0 24px 60px rgba(74, 52, 32, 0.12);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 32px 16px 56px;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(231, 180, 132, 0.26), transparent 24%),
+                linear-gradient(180deg, #f8f3eb 0%, var(--bg) 100%);
+            font-family: "MiSans", "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            line-height: 1.85;
+        }
+
+        .page {
+            width: min(920px, 100%);
+            margin: 0 auto;
+            padding: 48px 36px;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            background: var(--paper);
+            box-shadow: var(--shadow);
+        }
+
+        h1, h2 {
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1.2;
+        }
+
+        h1 { margin: 0 0 8px; font-size: clamp(2rem, 5vw, 3.2rem); }
+
+        .subtitle {
+            margin: 0 0 28px;
+            font-size: 1.15rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        h2 { margin: 44px 0 14px; font-size: 1.7rem; }
+
+        p, li { font-size: 1.05rem; }
+        p { margin: 14px 0; }
+        ul, ol { margin: 12px 0; padding-left: 22px; }
+        ol li { margin: 8px 0; }
+
+        blockquote {
+            margin: 24px 0;
+            padding: 20px 24px;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 16px 16px 0;
+            background: var(--accent-bg);
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        blockquote p { margin: 8px 0; }
+
+        .callout {
+            margin: 24px 0;
+            padding: 20px 24px;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 16px 16px 0;
+            background: var(--accent-bg);
+        }
+
+        .callout.insight {
+            border-left-color: #2d6a4f;
+            background: rgba(45, 106, 79, 0.06);
+        }
+
+        .callout-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            color: var(--accent);
+        }
+
+        .callout.insight .callout-label { color: #2d6a4f; }
+
+        .deduction {
+            margin: 24px 0;
+            padding: 24px 28px;
+            border-radius: 16px;
+            background: rgba(45, 106, 79, 0.06);
+            border: 1px solid rgba(45, 106, 79, 0.15);
+        }
+
+        .deduction ol { margin: 12px 0 0; padding-left: 24px; }
+        .deduction li { margin: 10px 0; line-height: 1.7; }
+
+        strong { color: #332a22; }
+        .muted { color: var(--muted); }
+
+        .meta {
+            margin-top: 48px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .meta a { color: var(--accent); text-decoration: none; }
+        .meta a:hover { text-decoration: underline; }
+
+        @media (max-width: 640px) {
+            .page { padding: 28px 18px; }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <h1>Explicit vs. Implicit Logic: A Paradigm Sketch for Software Engineering in the AI Era</h1>
+        <p class="subtitle">
+            This article started with the most ordinary production incident: AI-generated code passed CI but couldn&rsquo;t survive production.<br>
+            Starting from that frustration, I tried to think the problem through clearly.
+        </p>
+
+        <blockquote>
+            <p>If something works correctly in every verifiable environment, then it&rsquo;s correct. If it can withstand the test of a real production environment, then it can be used in real production.</p>
+            <p>Throw a crude version of TikTok into a sandbox. Validate it continuously with real production data&mdash;HTTP requests, security tests, real observability metrics constraining its behavior. Let it continuously update code, config, and data within a minimal independent unit. Eventually, you get an AI capable of building the real thing.</p>
+        </blockquote>
+
+        <!-- ─── Explicit & Implicit ─── -->
+        <h2>Explicit Logic vs. Implicit Logic</h2>
+        <p>
+            From an information-theoretic perspective, the logic of any industrial-grade software system comprises two parts: explicit logic and implicit logic.
+        </p>
+        <p>
+            <strong>Explicit Logic</strong>: the stuff AI can easily read and learn. Requirement docs, API definitions, coding standards, test cases&mdash;anything you can write down and put into a training set. That&rsquo;s explicit logic.
+        </p>
+        <p>
+            <strong>Implicit Logic</strong>: constraints deeply embedded within system execution paths&mdash;governing behavior under real physical loads and non-ideal network timing. It forms the stability foundation of systems operating in complex topologies, manifesting in two dimensions:
+        </p>
+        <ul>
+            <li><strong>Architectural Design Philosophy</strong>: high-level design intent typically held only by core developers, whose knowledge transfer involves extreme information loss and communication overhead.</li>
+            <li><strong>Boundary Constraint Behaviors</strong>: rarely documented in specifications, these typically exist as patches for historical anomalies or defensive code (e.g., adaptive rate limiting, flexible compensation under distributed network partitions, exponential backoff retries). Such logic grows exponentially with system scale, representing a form of &ldquo;necessary redundancy&rdquo;&mdash;its absence causes system cascades, while over-specification leads to complexity entropy.</li>
+        </ul>
+
+        <!-- ─── AI's Limitation ─── -->
+        <h2>The Limitation of AI Coding</h2>
+        <p>
+            Current AI training is essentially a grand ceremony of explicit logic infusion&mdash;the embodiment of the traditional &ldquo;requirement &rarr; code&rdquo; development model. We teach AI to write &ldquo;seemingly correct&rdquo; code using massive volumes of requirement docs, Q&amp;A pairs, and code snippets. Then we evaluate it with an explicit logic ruler: does the code run? Any syntax errors? Does it match the spec?
+        </p>
+        <p>
+            But that ruler can&rsquo;t measure implicit logic.
+        </p>
+        <p>
+            Today&rsquo;s AI doesn&rsquo;t know what memory fragmentation is. Doesn&rsquo;t know what connection pool exhaustion looks like. Doesn&rsquo;t know about cold-start latency spikes. Because none of that knowledge exists in the training data. It lives in every production alert, in every &ldquo;I don&rsquo;t know why, but restarting it fixed it&rdquo; moment.
+        </p>
+        <p>
+            This is why you can have AI generate an entire codebase that passes in the test environment, only to watch it collapse the moment it hits production.
+        </p>
+
+        <!-- ─── Deduction ─── -->
+        <h2>An Engineer&rsquo;s Deduction Chain</h2>
+        <p>AI needs to learn rules to generate correct output.</p>
+
+        <div class="deduction">
+            <ol>
+                <li>Rules come in two kinds: those you can write down (explicit logic), and those that can only manifest at runtime (implicit logic).</li>
+                <li>Current AI training almost exclusively feeds explicit logic.</li>
+                <li>Explicit logic hits diminishing returns past a certain point. Because what determines production survival is implicit logic.</li>
+                <li>Implicit logic exists almost exclusively in production environments.</li>
+                <li><strong>Therefore, the future of AI training must involve turning production into a continuous data stream that AI can perceive and learn from.</strong></li>
+                <li>This means bridging code authoring and production operations. In the AI-native era, developer and operator must become one.</li>
+                <li>If AI only needs continuous production data to evolve stronger intelligence, does that mean we&rsquo;ve been trapped in the &ldquo;requirement &rarr; code&rdquo; mental model all along? Because human requirements are inherently dimensionally reduced&mdash;they can never fully cover every minimal unit of logic the real world demands. So directly fitting real production data is the answer? AI doesn&rsquo;t need requirements&mdash;or at least not fragmented requirements? Just let it fit the real world, and the result will necessarily contain whatever was &ldquo;required&rdquo;?</li>
+            </ol>
+        </div>
+
+        <!-- ─── Benefits ─── -->
+        <h2>What This Unlocks</h2>
+        <ul>
+            <li>The ultimate form of DevOps&mdash;the ideal runtime for software engineering. Development, testing, deployment, and monitoring are no longer separate phases but a single continuous feedback loop.</li>
+            <li>Eliminates distribution shift between &ldquo;training set&rdquo; and &ldquo;real world.&rdquo; The data AI trains on is production data&mdash;there is no &ldquo;trained fine, broke in prod&rdquo; problem.</li>
+            <li>No extra context plumbing needed. The production environment (a massive container-based AI orchestration platform) is itself a unified context&mdash;all metrics and data available on demand.</li>
+            <li>AI learns within the container platform, and implicit logic emerges continuously.</li>
+            <li>Solves the high-quality data collection problem in AI training&mdash;clear inputs/outputs, clear observability metrics. AI-generated code iterates through metric feedback loops, solving implicit logic problems until reaching production-grade quality.</li>
+            <li>The production environments of engineers and researchers converge. The same container platform serves as both the engineer&rsquo;s runtime and the researcher&rsquo;s lab.</li>
+            <li>Software engineering becomes a continuously self-evolving entity.</li>
+        </ul>
+
+        <!-- ─── Approach ─── -->
+        <h2>A Path Forward</h2>
+        <p>
+            The vision above is compelling, but the challenges remain significant. However, they are fundamentally engineering architecture problems at the compute and infrastructure level&mdash;not theoretical dead ends.
+        </p>
+        <p>
+            The overall approach is a data-driven closed loop: production traffic is recorded and cached, then replayed into an AI sandbox that mirrors the production topology; AI generates code and runs it inside the sandbox; the observability platform continuously collects behavioral metrics (latency, error rates, resource utilization, etc.) and compares them against the real project&rsquo;s baseline; deviations form a reward signal that drives AI to iterate on the code. This cycle runs continuously until the sandbox&rsquo;s behavioral metrics converge to production-grade standards.
+        </p>
+        <p>
+            In the traditional development era, this paradigm lacked the engineering foundations. But in today&rsquo;s cloud-native era, most pain points have been addressed. The infrastructure each stage depends on&mdash;observability platforms (OpenTelemetry, SkyWalking), traffic recording/replay (GoReplay, Sharingan), container orchestration and lightweight VMs (Kubernetes, Firecracker), and reinforcement learning frameworks (RLHF/GRPO pipelines)&mdash;has all reached industrial-grade maturity. The tech stack is no longer the bottleneck.
+        </p>
+        <p>
+            Drawing on the self-play approach of AlphaZero, I propose a Shadow Evolution Paradigm as an attempt at a solution.
+        </p>
+
+        <!-- ─── Shadow Evolution ─── -->
+        <h2>Shadow Evolution Paradigm</h2>
+        <p>
+            The core idea is simple: build AI a sandbox that mirrors the production topology, and let it live, learn, and evolve inside.
+        </p>
+        <p>
+            Concretely, the AI sandbox shares the same container infrastructure as the real project&mdash;same network topology, same resource constraints, same observability collection. AI is given only explicit logic, generates a first version of the code, and deploys it into the sandbox. Then, recorded production traffic is replayed into the sandbox, and the observability platform compares behavioral differences in real time&mdash;latency distributions, error rates, throughput, resource consumption&mdash;these deviations form the reward signal that drives AI to iterate on the code.
+        </p>
+        <p>
+            This process runs continuously: AI keeps modifying code, configuration, and data; the sandbox&rsquo;s behavioral metrics gradually converge toward the production baseline. When the two sets of observability metrics converge within an acceptable threshold, the code in the sandbox is production-grade. Throughout this process, nobody explicitly taught AI how to handle connection pool exhaustion or how to implement cascading circuit breakers&mdash;that implicit logic evolved on its own from production data feedback.
+        </p>
+
+        <!-- ─── Closing ─── -->
+        <h2>A Final Note</h2>
+        <p>
+            This article started with the most ordinary production incident: AI-generated code passed CI but couldn&rsquo;t survive production.
+        </p>
+        <p>
+            Starting from that incident, I tried to think the problem through. That led to the concept of &ldquo;explicit logic&rdquo; and &ldquo;implicit logic.&rdquo; That led to the deduction chain. That led to a conjecture about the future of AI training and the next generation of software engineering.
+        </p>
+        <p>
+            By the time I finished writing, I had not invented any new technology, nor run a single experiment. I simply took an ordinary engineer&rsquo;s frustration with production systems and turned it into a barely coherent line of reasoning.
+        </p>
+
+        <div class="meta">
+            <p>Author: <a href="/about/">Xiangxi Shi</a> &middot; April 2026</p>
+        </div>
+    </main>
+</body>
+
+</html>
