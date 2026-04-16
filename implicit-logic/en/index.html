@@ -156,17 +156,17 @@
             <strong>Explicit Logic</strong>: the stuff AI can easily read and learn. Requirement docs, API definitions, coding standards, test cases&mdash;anything you can write down and put into a training set. That&rsquo;s explicit logic.
         </p>
         <p>
-            <strong>Implicit Logic</strong>: constraints deeply embedded within system execution paths&mdash;governing behavior under real physical loads and non-ideal network timing. It forms the stability foundation of systems operating in complex topologies, manifesting in two dimensions:
+            <strong>Implicit Logic</strong>: constraints that are hard to fully capture in documentation, yet determine whether a system can remain stable under real load and complex timing conditions. They form the basis for stability in complex systems, manifesting in two dimensions:
         </p>
         <ul>
             <li><strong>Architectural Design Philosophy</strong>: high-level design intent typically held only by core developers, whose knowledge transfer involves extreme information loss and communication overhead.</li>
-            <li><strong>Boundary Constraint Behaviors</strong>: rarely documented in specifications, these typically exist as patches for historical anomalies or defensive code (e.g., adaptive rate limiting, flexible compensation under distributed network partitions, exponential backoff retries). Such logic grows exponentially with system scale, representing a form of &ldquo;necessary redundancy&rdquo;&mdash;its absence causes system cascades, while over-specification leads to complexity entropy.</li>
+            <li><strong>Boundary Constraint Behaviors</strong>: rarely documented in specifications, these typically exist as patches for historical anomalies or defensive code (e.g., adaptive rate limiting, flexible compensation under distributed network partitions, exponential backoff retries). As systems scale, this kind of logic expands rapidly, representing a form of &ldquo;necessary redundancy&rdquo;&mdash;without it, cascading failures or even system collapse become likely; over-defining it, meanwhile, drives up complexity entropy.</li>
         </ul>
 
         <!-- ─── AI's Limitation ─── -->
         <h2>The Limitation of AI Coding</h2>
         <p>
-            Current AI training is essentially a grand ceremony of explicit logic infusion&mdash;the embodiment of the traditional &ldquo;requirement &rarr; code&rdquo; development model. We teach AI to write &ldquo;seemingly correct&rdquo; code using massive volumes of requirement docs, Q&amp;A pairs, and code snippets. Then we evaluate it with an explicit logic ruler: does the code run? Any syntax errors? Does it match the spec?
+            Current AI training is essentially a grand ceremony of explicit logic infusion&mdash;an extension of the traditional &ldquo;requirement &rarr; code&rdquo; path. We teach AI to write &ldquo;seemingly correct&rdquo; code using massive volumes of requirement docs, Q&amp;A pairs, and code snippets. Then we evaluate it with an explicit-logic ruler: does the code run? Any syntax errors? Does it match the spec?
         </p>
         <p>
             But that ruler can&rsquo;t measure implicit logic.
@@ -190,7 +190,7 @@
                 <li>Implicit logic exists almost exclusively in production environments.</li>
                 <li><strong>Therefore, the future of AI training must involve turning production into a continuous data stream that AI can perceive and learn from.</strong></li>
                 <li>This means bridging code authoring and production operations. In the AI-native era, developer and operator must become one.</li>
-                <li>If AI only needs continuous production data to evolve stronger intelligence, does that mean we&rsquo;ve been trapped in the &ldquo;requirement &rarr; code&rdquo; mental model all along? Because human requirements are inherently dimensionally reduced&mdash;they can never fully cover every minimal unit of logic the real world demands. So directly fitting real production data is the answer? AI doesn&rsquo;t need requirements&mdash;or at least not fragmented requirements? Just let it fit the real world, and the result will necessarily contain whatever was &ldquo;required&rdquo;?</li>
+                <li>If AI can develop stronger capability simply by engaging with continuous data from production, then perhaps we have been constrained all along by the &ldquo;requirement &rarr; code&rdquo; mental model. Human requirements are themselves a lossy, lower-dimensional expression; they may never fully cover the minimal logic demanded by the real world. By contrast, letting AI fit directly against real-world feedback may be a more direct path toward the requirement itself.</li>
             </ol>
         </div>
 
@@ -215,7 +215,7 @@
             The overall approach is a data-driven closed loop: production traffic is recorded and cached, then replayed into an AI sandbox that mirrors the production topology; AI generates code and runs it inside the sandbox; the observability platform continuously collects behavioral metrics (latency, error rates, resource utilization, etc.) and compares them against the real project&rsquo;s baseline; deviations form a reward signal that drives AI to iterate on the code. This cycle runs continuously until the sandbox&rsquo;s behavioral metrics converge to production-grade standards.
         </p>
         <p>
-            In the traditional development era, this paradigm lacked the engineering foundations. But in today&rsquo;s cloud-native era, most pain points have been addressed. The infrastructure each stage depends on&mdash;observability platforms (OpenTelemetry, SkyWalking), traffic recording/replay (GoReplay, Sharingan), container orchestration and lightweight VMs (Kubernetes, Firecracker), and reinforcement learning frameworks (RLHF/GRPO pipelines)&mdash;has all reached industrial-grade maturity. The tech stack is no longer the bottleneck.
+            In the traditional development era, this paradigm lacked the engineering foundations needed to be practical. But in today&rsquo;s cloud-native era, many of the key pain points have been eased. The infrastructure each stage depends on&mdash;observability platforms (OpenTelemetry, SkyWalking), traffic recording/replay (GoReplay, Sharingan), container orchestration and lightweight VMs (Kubernetes, Firecracker), and reinforcement learning frameworks (RLHF/GRPO pipelines)&mdash;already has fairly mature industrial practice behind it. Individual technologies are no longer the core obstacle; the real difficulty lies in integrating them in a way that is both cost-effective and secure.
         </p>
         <p>
             Drawing on the self-play approach of AlphaZero, I propose a Shadow Evolution Paradigm as an attempt at a solution.
@@ -236,13 +236,16 @@
         <!-- ─── Closing ─── -->
         <h2>A Final Note</h2>
         <p>
-            This article started with the most ordinary production incident: AI-generated code passed CI but couldn&rsquo;t survive production.
+            Looking back, this article really began with an ordinary production incident: AI-generated code passed CI but couldn&rsquo;t survive production.
         </p>
         <p>
             Starting from that incident, I tried to think the problem through. That led to the concept of &ldquo;explicit logic&rdquo; and &ldquo;implicit logic.&rdquo; That led to the deduction chain. That led to a conjecture about the future of AI training and the next generation of software engineering.
         </p>
         <p>
-            By the time I finished writing, I had not invented any new technology, nor run a single experiment. I simply took an ordinary engineer&rsquo;s frustration with production systems and turned it into a barely coherent line of reasoning.
+            To truly validate this paradigm, you would need a production-mirrored environment, real traffic, and complete observability and security-isolation infrastructure. That scale of engineering effort is already far beyond what an ordinary lab can carry.
+        </p>
+        <p>
+            But the direction it points to is already clear enough: let production become AI&rsquo;s interface to the real world.
         </p>
 
         <div class="meta">
