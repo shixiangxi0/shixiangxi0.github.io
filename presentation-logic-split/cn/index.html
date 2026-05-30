@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用前端 React 架构写一个杀戮尖塔</title>
+    <meta name="description" content="用 React 的组件自治与状态提升思想，拆分卡牌游戏的表现与逻辑。">
+    <meta property="og:title" content="用前端 React 架构写一个杀戮尖塔">
+    <meta property="og:description" content="用 React 的组件自治与状态提升思想，拆分卡牌游戏的表现与逻辑。">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans-webfont/misans-style.css" />
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f6f1e8;
+            --paper: #fffaf2;
+            --text: #1f1b16;
+            --muted: #6d6459;
+            --line: rgba(31, 27, 22, 0.12);
+            --accent: #9f4d31;
+            --accent-bg: rgba(159, 77, 49, 0.06);
+            --shadow: 0 24px 60px rgba(74, 52, 32, 0.12);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 32px 16px 56px;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(231, 180, 132, 0.26), transparent 24%),
+                linear-gradient(180deg, #f8f3eb 0%, var(--bg) 100%);
+            font-family: "MiSans", "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            line-height: 1.85;
+        }
+
+        .page {
+            width: min(920px, 100%);
+            margin: 0 auto;
+            padding: 48px 36px;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            background: var(--paper);
+            box-shadow: var(--shadow);
+        }
+
+        h1 {
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1.2;
+            margin: 0 0 8px;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+        }
+
+        .subtitle {
+            margin: 0 0 28px;
+            font-size: 1.15rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        p, li { font-size: 1.05rem; }
+        p { margin: 14px 0; }
+        ul { margin: 12px 0; padding-left: 22px; }
+
+        blockquote {
+            margin: 24px 0;
+            padding: 20px 24px;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 16px 16px 0;
+            background: var(--accent-bg);
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        blockquote p { margin: 8px 0; }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .comparison>div {
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: var(--accent-bg);
+        }
+
+        .comparison>div:last-child {
+            background: rgba(45, 106, 79, 0.06);
+        }
+
+        .comparison .col-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+        }
+
+        .comparison>div:first-child .col-label {
+            color: var(--muted);
+        }
+
+        .comparison>div:last-child .col-label {
+            color: #2d6a4f;
+        }
+
+        .diagram {
+            margin: 24px 0;
+            padding: 24px 28px;
+            border-radius: 16px;
+            background: rgba(31, 27, 22, 0.04);
+            font-family: "SF Mono", "Cascadia Code", "Fira Code", monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .diagram .label {
+            color: var(--muted);
+        }
+
+        .diagram .arrow {
+            color: var(--accent);
+        }
+
+        .diagram .box {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(159, 77, 49, 0.1);
+        }
+
+        .diagram .box-alt {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(45, 106, 79, 0.1);
+        }
+
+        strong { color: #332a22; }
+
+        .meta {
+            margin-top: 48px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .meta a { color: var(--accent); text-decoration: none; }
+        .meta a:hover { text-decoration: underline; }
+
+        code {
+            font-family: "SF Mono", "Cascadia Code", "Fira Code", monospace;
+            font-size: 0.92em;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(31, 27, 22, 0.06);
+        }
+
+        @media (max-width: 640px) {
+            .page { padding: 28px 18px; }
+            .comparison { grid-template-columns: 1fr; }
+        }
+    </style>
+    <link rel="stylesheet" href="/theme.css" />
+    <script src="/theme.js"></script>
+</head>
+
+<body>
+    <main class="page">
+        <h1>用前端 React 架构写一个杀戮尖塔</h1>
+        <p class="subtitle">
+            组件持有表现，也可以持有行为，但不能持有逻辑。
+        </p>
+
+        <p>
+            现代前端中，组件可以独立存在，具有自治性。一个按钮自加 1，它持有视觉表现，也持有触发表现变化的交互行为，但不持有"为什么加 1"的业务逻辑——数据流向哪里、触发什么副作用，不在它的管辖范围。
+        </p>
+
+        <p>
+            把这个边界再推一层：组件可以持有<strong>行为</strong>，但不能持有<strong>逻辑</strong>。
+        </p>
+
+        <blockquote>
+            <p><strong>表现</strong>：玩家能看到、听到的一切。</p>
+            <p><strong>行为</strong>：组件自主触发的动作，不改变跨系统的共享状态。</p>
+            <p><strong>逻辑</strong>：影响未来游戏状态的决定性规则。</p>
+        </blockquote>
+
+        <p>
+            敌人头上闪出一个红色图标，提示它下回合要攻击——这是行为。图标怎么出现、怎么抖动、持续多久，敌人组件自己处理。但这个图标本身还没有改变任何状态，玩家 HP 没变，手牌没变。真正执行攻击、结算伤害的那一刻，才穿透到逻辑层。
+        </p>
+
+        <div class="comparison">
+            <div>
+                <span class="col-label">表现层自治</span>
+                <p style="margin:4px 0;font-size:0.95rem;">卡牌悬停放大、拖拽轨迹</p>
+                <p style="margin:4px 0;font-size:0.95rem;">敌人意图图标闪烁</p>
+                <p style="margin:4px 0;font-size:0.95rem;">战斗背景粒子特效</p>
+                <p style="margin:4px 0;font-size:0.95rem;">伤害数字飘字动画</p>
+            </div>
+            <div>
+                <span class="col-label">上报逻辑层</span>
+                <p style="margin:4px 0;font-size:0.95rem;">打出卡牌、消耗能量</p>
+                <p style="margin:4px 0;font-size:0.95rem;">敌人攻击结算伤害</p>
+                <p style="margin:4px 0;font-size:0.95rem;">抽牌、弃牌、洗牌</p>
+                <p style="margin:4px 0;font-size:0.95rem;">施加中毒、虚弱等状态</p>
+            </div>
+        </div>
+
+        <p>
+            逻辑层不指挥"播放哪个动画"，它只做一件事：处理上报的事件，计算出新状态，然后下发一份纯数据快照。
+        </p>
+
+        <blockquote>
+            <p><code>{ hp: 45, energy: 1, block: 8, hand: ['打击', '防御'], poison: 3 }</code></p>
+        </blockquote>
+
+        <p>
+            表现层拿到快照，自行决定如何呈现。能量球从 3 颗熄灭到 1 颗、伤害数字飘出来、敌人身体后仰——这些都是表现层的自由。给定同一份快照，表现层必须产出确定性的表现序列，内部的随机和时序都要基于快照参数推导。
+        </p>
+
+        <p>
+            这跟 React 的虚拟 DOM 来操作真实 DOM 类似。虚拟 DOM 是轻量状态树，React 比较差异后批量应用到真实 DOM。游戏中，逻辑层下发的快照就是"虚拟状态树"，表现层是"真实渲染管线"。
+        </p>
+
+        <div class="diagram">
+            <span class="label">React</span><br>
+            State <span class="arrow">→</span> <span class="box">Virtual DOM</span> <span class="arrow">→</span> Diff <span class="arrow">→</span> <span class="box-alt">Real DOM</span><br>
+            <br>
+            <span class="label">Game</span><br>
+            Events <span class="arrow">→</span> <span class="box">Logic Layer</span> <span class="arrow">→</span> Snapshot <span class="arrow">→</span> <span class="box-alt">Presentation</span>
+        </div>
+
+        <p>
+            对照起来看：React 的状态提升，对应逻辑层集中处理所有状态变更，表现层无状态。单向数据流，对应事件上报到逻辑层、快照下放到表现层，不可反向。纯函数组件 <code>props → UI</code>，对应表现层 <code>snapshot → animation</code>，给定相同输入必得相同输出。Reconciliation，对应表现层对比新旧快照，决定动画过渡策略。合成事件，对应只有改变全局状态的事件才冒泡到逻辑层，局部行为就地消化。
+        </p>
+
+        <p>
+            核心差异只有一个：虚拟 DOM 改变的是<strong>静态 UI 的变换</strong>，快照改变的是<strong>连续动画的切换</strong>。
+        </p>
+
+        <p>
+            这样拆分之后，确定性回放变得简单——只记录事件序列和快照历史，表现层的丰富动画不影响回放一致性。联机对战也简单——逻辑在服务端运行，客户端只接收快照，可本地预测插值。逻辑层是纯数据变换，不依赖渲染管线，可完全无头测试。美术调整动画、特效参数，不触碰逻辑层代码。
+        </p>
+
+        <div class="meta">
+            <p>作者：<a href="/about/">石祥熙</a></p>
+        </div>
+    </main>
+</body>
+
+</html>

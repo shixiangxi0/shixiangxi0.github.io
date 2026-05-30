@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双世界理论：游戏架构的另一种视角</title>
+    <meta name="description" content="双世界理论提出一个不同的出发点：游戏首先是一个确定性状态机。玩家按键、规则触发、数值变化、阶段流转——这些本质上是离散的状态迁移。">
+    <meta property="og:title" content="双世界理论：游戏架构的另一种视角">
+    <meta property="og:description" content="双世界理论提出一个不同的出发点：游戏首先是一个确定性状态机。玩家按键、规则触发、数值变化、阶段流转——这些本质上是离散的状态迁移。">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans-webfont/misans-style.css" />
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f6f1e8;
+            --paper: #fffaf2;
+            --text: #1f1b16;
+            --muted: #6d6459;
+            --line: rgba(31, 27, 22, 0.12);
+            --accent: #9f4d31;
+            --accent-bg: rgba(159, 77, 49, 0.06);
+            --shadow: 0 24px 60px rgba(74, 52, 32, 0.12);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 32px 16px 56px;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(231, 180, 132, 0.26), transparent 24%),
+                linear-gradient(180deg, #f8f3eb 0%, var(--bg) 100%);
+            font-family: "MiSans", "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            line-height: 1.85;
+        }
+        .page {
+            width: min(920px, 100%);
+            margin: 0 auto;
+            padding: 48px 36px;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            background: var(--paper);
+            box-shadow: var(--shadow);
+        }
+        h1, h2, h3 {
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1.2;
+        }
+        h1 {
+            margin: 0 0 8px;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+        }
+        .subtitle {
+            margin: 0 0 28px;
+            font-size: 1.15rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        h2 {
+            margin: 44px 0 14px;
+            font-size: 1.7rem;
+        }
+        h3 {
+            margin: 32px 0 10px;
+            font-size: 1.3rem;
+        }
+        p, li {
+            font-size: 1.05rem;
+        }
+        p {
+            margin: 14px 0;
+        }
+        ul, ol {
+            margin: 12px 0;
+            padding-left: 22px;
+        }
+        .callout {
+            margin: 24px 0;
+            padding: 20px 24px;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 16px 16px 0;
+            background: var(--accent-bg);
+        }
+        .callout.insight {
+            border-left-color: #2d6a4f;
+            background: rgba(45, 106, 79, 0.06);
+        }
+        .callout-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            color: var(--accent);
+        }
+        .callout.insight .callout-label {
+            color: #2d6a4f;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .comparison>div {
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: var(--accent-bg);
+        }
+        .comparison>div:last-child {
+            background: rgba(45, 106, 79, 0.06);
+        }
+        .comparison .col-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+        }
+        .comparison>div:first-child .col-label {
+            color: var(--muted);
+        }
+        .comparison>div:last-child .col-label {
+            color: #2d6a4f;
+        }
+        strong {
+            color: #332a22;
+        }
+        .muted {
+            color: var(--muted);
+        }
+        .meta {
+            margin-top: 48px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+        .meta a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .meta a:hover {
+            text-decoration: underline;
+        }
+        pre {
+            margin: 14px 0;
+            padding: 16px 20px;
+            background: #f5f0e8;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+        }
+        pre code {
+            font-size: 0.95rem;
+        }
+        blockquote {
+            margin: 14px 0;
+            padding: 14px 20px;
+            border-left: 4px solid var(--accent);
+            background: var(--accent-bg);
+            border-radius: 0 12px 12px 0;
+        }
+        blockquote p {
+            margin: 0;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid var(--line);
+            margin: 36px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 1.05rem;
+        }
+        th, td {
+            padding: 10px 14px;
+            border: 1px solid var(--line);
+            text-align: left;
+        }
+        th {
+            background: var(--accent-bg);
+            font-weight: 700;
+        }
+        @media (max-width: 640px) {
+            .page {
+                padding: 28px 18px;
+            }
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/theme.css" />
+    <script src="/theme.js"></script>
+</head>
+<body>
+    <main class="page">
+<h1>双世界理论：游戏架构的另一种视角</h1>
+<p style="color:var(--muted);font-size:0.95rem;">延伸阅读：<a href="/how-to-understand-dual-world-theory/cn/">如何理解双世界理论</a></p>
+<h2>游戏开发的问题</h2>
+<p>做过游戏的人都熟悉这种困境：你只是想调一下攻击动画的速度，却发现伤害结算的时机跟着变了；你改了一个 Buff 的数值，却发现某个特效的触发逻辑埋在那段代码的缝隙里。逻辑和表现像两团毛线缠在一起，牵一发而动全身。</p>
+<p>问题的根源不是代码写得不够好，而是<strong>我们一直以来用&quot;所见即所得&quot;的方式理解游戏</strong>。角色在屏幕上移动，我们就觉得游戏世界在移动；血条在减少，我们就觉得事实在减少。但这种视角把&quot;世界本身&quot;和&quot;世界的投影&quot;混为一谈。</p>
+<p>双世界理论提出一个不同的出发点：<strong>游戏首先是一个确定性状态机</strong>。玩家按键、规则触发、数值变化、阶段流转——这些本质上是离散的状态迁移。屏幕上的动画、特效、粒子，只是这些离散变更的感官投影。</p>
+<p><strong>事件才是事实，状态只是投影。</strong></p>
+<hr>
+<h2>两个世界</h2>
+<p>基于这个视角，系统自然分成两层。</p>
+<h3>逻辑层：世界的事实</h3>
+<p>逻辑层是游戏世界的&quot;真相&quot;。它负责阐述客观世界规则，维护当前场景的全部状态，处理所有改变状态的事件。它的核心特征有两个：</p>
+<ul>
+<li><strong>串行</strong>：所有事件排队处理，逐个执行。&quot;同时&quot;发生的一切被强制排序，不存在真正的并行写入</li>
+<li><strong>确定性</strong>：所有状态推演都是确定性的，同样的因果输入必然导致同样的状态输出</li>
+</ul>
+<p>一次攻击命中，在逻辑层不是一段动画，而是一串离散事件：<code>attack</code> → <code>hit</code> → <code>damage</code> → <code>loss</code> → <code>die</code>。每个事件瞬间完成，留下确定的状态变更。</p>
+<h3>表现层：感官的投影</h3>
+<p>表现层把逻辑层的离散变化翻译成连续的视听体验。攻击动画、追击轨迹、血条补间、粒子特效——这些都在这里发生。它的特征与逻辑层正好相反：</p>
+<ul>
+<li><strong>并行</strong>：多个动画可以同时运行，各跑各的</li>
+<li><strong>可丢弃</strong>：渲染层崩溃、动画被跳过，都不会影响世界事实</li>
+</ul>
+<p>逻辑层的事件是&quot;发生了什么&quot;，表现层的事件是&quot;怎么演出来&quot;。</p>
+<h3>边界在哪？</h3>
+<p>判断一件东西归哪层，只需要回答一个问题：</p>
+<blockquote>
+<p><strong>这件事结束后，世界事实有没有改变？</strong></p>
+</blockquote>
+<ul>
+<li>不改变 → 表现层，自治（挥刀动画、镜头晃动、UI 过渡）</li>
+<li>改变，但只在当前场景 → 逻辑层（扣血、获得 Buff、移除敌人）</li>
+<li>改变，且跨场景 → 持久状态，必须存档（角色等级、背包、任务进度）</li>
+</ul>
+<hr>
+<h2>连续过程去哪了？</h2>
+<p>这里有一个明显的问题：游戏里大量存在&quot;持续一段时间&quot;的东西——3秒蓄力、0.5秒格挡窗口、连击输入期。逻辑层不是离散的吗？这些连续过程归谁管？</p>
+<p>答案是：<strong>临时状态窗口</strong>。</p>
+<p>临时状态窗口是逻辑层内部的一个异步容器。它在一段持续时间内运行，监听时间流逝和外部事件，窗口结束时向逻辑层提交一个离散结论。比如蓄力3秒，窗口开启后连续运行，3秒一到提交&quot;释放技能&quot;；如果中途被打断，窗口销毁，结论作废。</p>
+<p>临时状态有三个属性：</p>
+<ul>
+<li><strong>有时效</strong>：窗口关闭，内部状态自然消亡</li>
+<li><strong>可抢占</strong>：上层事件到达时，旧窗口可以被强制取消</li>
+<li><strong>沙盒化</strong>：窗口只产结论，不保留过程。过程状态随窗口销毁，逻辑层只裁决最终结论</li>
+</ul>
+<p>这解决了工程实现上的一大问题：<strong>逻辑层不会完全统治表现层，不需要时刻维护两套状态</strong>。逻辑层仍然保持对外派发离散串行事件，只是内部有能力处理并发耗时动画流程。</p>
+<p>在代码工程上可通过<strong>结构化并发</strong>来实现。</p>
+<hr>
+<h2>分离之后：四条约定</h2>
+<p>把世界分成两层只是起点。真正的问题是：<strong>分离后的两半，如何仍然是同一个世界？</strong></p>
+<p>如果只有分离没有约定，逻辑层会变成纯粹的理论模型，表现层会变成脱离事实的炫技秀场。双世界理论的核心不是&quot;分开&quot;，而是&quot;分开后通过约定重新连接&quot;。</p>
+<h3>输入信号</h3>
+<p>玩家的输入是连续的——按住移动键、推拉摇杆。逻辑层只能消费离散事件。<strong>切割连续信号的主动权在逻辑层，不在表现层。</strong></p>
+<p>逻辑层预定义切割规则：按键按下切割为 <code>action:start</code>，释放切割为 <code>action:end</code>，拖拽跨越边界切割为 <code>target:changed</code>。表现层负责检测这些条件，在触发点上报离散事件。</p>
+<p>表现层可以自治处理规则之外的连续输入（镜头微调、悬停（hover）反馈），但这些自治行为不能产生玩家可依赖的语义信号。如果玩家看到一个怪在攻击自己并因此按了闪避，这个&quot;攻击&quot;必须已经被逻辑层承认——不能只是表现层的假动作。</p>
+<h3>状态订阅</h3>
+<p>表现层不直接读取逻辑层的原始状态树。它通过三段式消费状态：</p>
+<ol>
+<li><strong>发布</strong>：逻辑层每次状态变更后，以 <code>patches + timeline</code> 的形式发布变更记录</li>
+<li><strong>订阅</strong>：渲染组件声明自己依赖的状态片段，只接收关心的变更</li>
+<li><strong>派生</strong>：渲染组件可以基于订阅状态做视觉派生（如&quot;根据血量计算血条颜色&quot;），但派生结果仅限于自身，不能影响其他渲染组件。</li>
+</ol>
+<p>逻辑层发出的是&quot;世界变了什么&quot;，表现层决定的是&quot;我该怎么演这个变化&quot;。</p>
+<h3>同步与丢弃</h3>
+<p>表现层的连续过程不是完全自由的。两个世界在特定时刻需要同步彼此：</p>
+<ul>
+<li><strong>对齐</strong>：逻辑层发生离散事件时，表现层必须承认逻辑状态的最新事实。比如伤害结算事件到达，目标真实血量已经是87，血条可以还在从100滑向87的补间中，但如果此时下发第二次伤害，计算基础必须是87</li>
+<li><strong>过渡</strong>：两次对齐之间，表现层可以自由插值、预测、编排动画，逻辑层对过渡表现不进行任何干预</li>
+<li><strong>丢弃</strong>：如果表现层的连续过程还没收敛，逻辑层就已下发新事件（死亡动画还没播完，目标已经复活），表现层需要直接打断旧动画，迅速过渡到新的事实。</li>
+</ul>
+<p><strong>对齐时刻必须承认最新事实，过渡过程中可以自由发挥。</strong></p>
+<h3>组件自治</h3>
+<p>表现层自治体现为一个有限权限的清单：</p>
+<table>
+<thead>
+<tr>
+<th>权限范围</th>
+<th>表现层自治</th>
+<th>必须上报逻辑层</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>视觉表现</td>
+<td>动画编排、粒子、镜头推拉、UI 过渡</td>
+<td>—</td>
+</tr>
+<tr>
+<td>局部反馈</td>
+<td>Hover 效果、按下反馈、拖拽预览</td>
+<td>释放/确认时</td>
+</tr>
+<tr>
+<td>空间插值</td>
+<td>追击轨迹、移动平滑、转身过渡</td>
+<td>触发碰撞/进入范围/命中时</td>
+</tr>
+<tr>
+<td>行为决策</td>
+<td>—</td>
+<td>攻击发起、技能释放、状态切换</td>
+</tr>
+</tbody></table>
+<p>核心原则：<strong>如果玩家可能基于这个行为做出影响核心状态的决策，它就不能自治。</strong></p>
+<hr>
+<h2>这套理念带来什么</h2>
+<h3>测试友好</h3>
+<p>传统游戏里，因果链与渲染、物理和引擎时序交织在一起，难以独立推演。双世界将逻辑与表现分离，同样的状态和事件输入，必然得到同样的输出，因果链可以完整推演。</p>
+<h3>可重放</h3>
+<p>传统状态分散在对象的内存和回调中，提取完整快照需要额外工作。双世界里所有变更都是离散事件，世界历史是一条日志，重放即可回到关键事件。</p>
+<h3>AI友好</h3>
+<p>传统规则分布在动画回调和状态机之间，外部系统难以直接读取。双世界里规则是显式函数，状态是纯数据结构，AI 可以直接理解、预测和验证。</p>
+<hr>
+<h2>结语</h2>
+<p>双世界主张：</p>
+<blockquote>
+<p><strong>让世界的事实推演以最纯粹、最确定的方式运行；让感官体验以最自由、最连续的方式运行；然后用契约保证两者始终是同一个世界。</strong></p>
+</blockquote>
+<p>逻辑层处理&quot;发生了什么&quot;，表现层处理&quot;怎么演出来&quot;。但演出不是任意的——输入信号规定了产生了哪些发生世界状态变化的事实，状态订阅规定了事实如何被消费，同步与丢弃规定了什么时候必须对齐，自治清单规定了自由的边界。</p>
+<p><strong>逻辑层是绝对客观权威的、确定性的、不能被表现污染的；表现层是派生的、被逻辑原语诠释的，有生命周期的。两者不知道对方的存在，彼此正交，不能够互相调用，各自运行，各自生灭，彼此间通过同一套约定来组合成为一个连续时空。</strong></p>
+
+
+        <p style="color:var(--muted);font-size:0.95rem;">延伸阅读：<a href="/how-to-understand-dual-world-theory/cn/">如何理解双世界理论</a></p>
+
+        <div class="meta">
+            <p>作者：<a href="/about/">石祥熙</a></p>
+        </div>
+    </main>
+</body>
+</html>

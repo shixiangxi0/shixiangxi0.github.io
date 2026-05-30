@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Coding: The Overlooked Training Signal Lives in Production</title>
+    <title>AI Coding: Production Is the Real Teacher</title>
     <meta name="description" content="Current AI coding training corpora cover only explicit logic, while the implicit constraints that sustain industrial-grade system availability are entirely discarded. The Shadow Evolution Paradigm proposes using real behavioral traces from production environments as the raw training signal for large models.">
-    <meta property="og:title" content="AI Coding: The Overlooked Training Signal Lives in Production">
+    <meta property="og:title" content="AI Coding: Production Is the Real Teacher">
     <meta property="og:description" content="Current AI coding training corpora cover only explicit logic, while the implicit constraints that sustain industrial-grade system availability are entirely discarded. The Shadow Evolution Paradigm proposes using real behavioral traces from production environments as the raw training signal for large models.">
     <meta property="og:type" content="article">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans-webfont/misans-style.css" />
@@ -179,11 +179,13 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/theme.css" />
+    <script src="/theme.js"></script>
 </head>
 
 <body>
     <main class="page">
-        <h1>AI Coding: The Overlooked Training Signal Lives in Production</h1>
+        <h1>AI Coding: Production Is the Real Teacher</h1>
         <p class="subtitle">
             Today&rsquo;s frontier AI labs rely primarily on static &ldquo;text instruction &rarr; code&rdquo; mappings and constrained unit tests as training signals for large models.<br>
             Yet the implicit constraints that truly sustain industrial-grade systems through physical traffic surges and ensure high availability cannot be exhaustively captured by conventional documentation and test cases.
@@ -296,6 +298,17 @@
             </div>
         </div>
 
+        <h2>Human-Machine Parallel Co-learning</h2>
+        <p>
+            The three-step closed loop described above depicts AI evolving independently within a sandbox. Yet when facing architectural evolution in large-scale systems&mdash;when to split a monolith into microservices, when to introduce message queues for decoupling&mdash;current models still lack sufficient forward-looking judgment.
+        </p>
+        <p>
+            A more pragmatic path is human-machine parallelism: human engineers iterate normally on the main branch, while AI independently implements the same requirements within a sandbox. After each iteration, AI's output is structurally compared against the real changes committed by humans on the main branch&mdash;architectural refactoring, module splitting, abstraction layer introduction. What AI learns is no longer merely &ldquo;how to write code,&rdquo; but &ldquo;how architecture should evolve when the system encounters demand shocks.&rdquo;
+        </p>
+        <p>
+            This means training corpora expand from static code end-states to dynamic architectural evolution trajectories. As co-learning accumulates, AI's architectural decisions in the sandbox will gradually converge toward human engineers' judgment.
+        </p>
+
         <h2>Engineering Innovation &amp; Paradigm Shift Potential</h2>
         <ul>
             <li><strong>Breaking through the data bottleneck</strong>: Massive concurrent clusters generate enormous volumes of traces every second. Their information richness far surpasses what manually annotated &ldquo;code pairs&rdquo; can achieve.</li>
@@ -308,6 +321,7 @@
             <li><strong>Behavioral equivalence &ne; full path coverage</strong>: Code that performs perfectly on recorded traces still risks overfitting to those traces and failing to generalize to uncovered paths. Incorporating Chaos Engineering and rigorous formal verification is imperative.</li>
             <li><strong>Data privacy barriers</strong>: Production traffic inevitably involves sensitive data and must undergo security anonymization while preserving statistical characteristics before entering the sandbox loop&mdash;demanding extremely high security infrastructure standards.</li>
             <li><strong>Dramatic compute cost escalation</strong>: Compared to training on static annotated datasets, massive sandbox dynamic execution and continuous adversarial evaluation impose orders-of-magnitude pressure on existing compute and scheduling infrastructure.</li>
+            <li><strong>Cold-start dependency</strong>: The prerequisite for Shadow Evolution is a system already in operation with real traffic. Greenfield projects must still rely on traditional approaches to complete the zero-to-one build before acquiring users. This is an evolutionary paradigm from one to one hundred, not a creative paradigm starting from zero.</li>
         </ul>
         <p>
             These challenges constitute near-term implementation barriers, but they are fundamentally engineering architecture problems at the compute and infrastructure level&mdash;not fundamental theoretical obstacles.

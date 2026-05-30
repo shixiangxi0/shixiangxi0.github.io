@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dual-World Theory: Another Perspective on Game Architecture</title>
+    <meta name="description" content="Dual-World Theory proposes a different starting point: a game is first and foremost a deterministic state machine. Player inputs, rule triggers, numerical changes, and phase transitions are essentially discrete state migrations.">
+    <meta property="og:title" content="Dual-World Theory: Another Perspective on Game Architecture">
+    <meta property="og:description" content="Dual-World Theory proposes a different starting point: a game is first and foremost a deterministic state machine. Player inputs, rule triggers, numerical changes, and phase transitions are essentially discrete state migrations.">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans-webfont/misans-style.css" />
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f6f1e8;
+            --paper: #fffaf2;
+            --text: #1f1b16;
+            --muted: #6d6459;
+            --line: rgba(31, 27, 22, 0.12);
+            --accent: #9f4d31;
+            --accent-bg: rgba(159, 77, 49, 0.06);
+            --shadow: 0 24px 60px rgba(74, 52, 32, 0.12);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 32px 16px 56px;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(231, 180, 132, 0.26), transparent 24%),
+                linear-gradient(180deg, #f8f3eb 0%, var(--bg) 100%);
+            font-family: "MiSans", "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            line-height: 1.85;
+        }
+        .page {
+            width: min(920px, 100%);
+            margin: 0 auto;
+            padding: 48px 36px;
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            background: var(--paper);
+            box-shadow: var(--shadow);
+        }
+        h1, h2, h3 {
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1.2;
+        }
+        h1 {
+            margin: 0 0 8px;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+        }
+        .subtitle {
+            margin: 0 0 28px;
+            font-size: 1.15rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        h2 {
+            margin: 44px 0 14px;
+            font-size: 1.7rem;
+        }
+        h3 {
+            margin: 32px 0 10px;
+            font-size: 1.3rem;
+        }
+        p, li {
+            font-size: 1.05rem;
+        }
+        p {
+            margin: 14px 0;
+        }
+        ul, ol {
+            margin: 12px 0;
+            padding-left: 22px;
+        }
+        .callout {
+            margin: 24px 0;
+            padding: 20px 24px;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 16px 16px 0;
+            background: var(--accent-bg);
+        }
+        .callout.insight {
+            border-left-color: #2d6a4f;
+            background: rgba(45, 106, 79, 0.06);
+        }
+        .callout-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            color: var(--accent);
+        }
+        .callout.insight .callout-label {
+            color: #2d6a4f;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .comparison>div {
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: var(--accent-bg);
+        }
+        .comparison>div:last-child {
+            background: rgba(45, 106, 79, 0.06);
+        }
+        .comparison .col-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+        }
+        .comparison>div:first-child .col-label {
+            color: var(--muted);
+        }
+        .comparison>div:last-child .col-label {
+            color: #2d6a4f;
+        }
+        strong {
+            color: #332a22;
+        }
+        .muted {
+            color: var(--muted);
+        }
+        .meta {
+            margin-top: 48px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+        .meta a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .meta a:hover {
+            text-decoration: underline;
+        }
+        pre {
+            margin: 14px 0;
+            padding: 16px 20px;
+            background: #f5f0e8;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+        }
+        pre code {
+            font-size: 0.95rem;
+        }
+        blockquote {
+            margin: 14px 0;
+            padding: 14px 20px;
+            border-left: 4px solid var(--accent);
+            background: var(--accent-bg);
+            border-radius: 0 12px 12px 0;
+        }
+        blockquote p {
+            margin: 0;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid var(--line);
+            margin: 36px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 1.05rem;
+        }
+        th, td {
+            padding: 10px 14px;
+            border: 1px solid var(--line);
+            text-align: left;
+        }
+        th {
+            background: var(--accent-bg);
+            font-weight: 700;
+        }
+        @media (max-width: 640px) {
+            .page {
+                padding: 28px 18px;
+            }
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/theme.css" />
+    <script src="/theme.js"></script>
+</head>
+<body>
+    <main class="page">
+<h1>Dual-World Theory: Another Perspective on Game Architecture</h1>
+<p style="color:var(--muted);font-size:0.95rem;">Further reading: <a href="/how-to-understand-dual-world-theory/en/">How to Understand Dual-World Theory</a></p>
+<h2>The Problem of Game Development</h2>
+<p>Anyone who has worked on games knows this dilemma: you just wanted to tweak the speed of an attack animation, only to find that the timing of damage calculation changed with it; you modified a Buff&#39;s value, only to discover that some special effect&#39;s trigger logic was buried in a crevice of that code. Logic and presentation are tangled like two balls of yarn—pull one thread and the whole body moves.</p>
+<p>The root of the problem isn&#39;t that the code isn&#39;t well written. It&#39;s that <strong>we have always understood games through a &quot;what you see is what you get&quot; lens</strong>. A character moves on screen, so we think the game world is moving; a health bar decreases, so we think the facts are decreasing. But this perspective conflates &quot;the world itself&quot; with &quot;the projection of the world.&quot;</p>
+<p>Dual-World Theory proposes a different starting point: <strong>a game is first and foremost a deterministic state machine</strong>. Player inputs, rule triggers, numerical changes, phase transitions—these are essentially discrete state migrations. The animations, effects, and particles on screen are merely sensory projections of these discrete changes.</p>
+<p><strong>Events are the facts; state is merely a projection.</strong></p>
+<hr>
+<h2>Two Worlds</h2>
+<p>From this perspective, the system naturally divides into two layers.</p>
+<h3>Logic Layer: The Facts of the World</h3>
+<p>The logic layer is the &quot;truth&quot; of the game world. It is responsible for articulating objective world rules, maintaining the complete state of the current scene, and processing all events that change state. It has two core characteristics:</p>
+<ul>
+<li><strong>Serial</strong>: All events are queued and processed one by one. Everything that happens &quot;simultaneously&quot; is forcibly ordered; there is no true parallel writing.</li>
+<li><strong>Deterministic</strong>: All state deductions are deterministic; the same causal input always yields the same state output.</li>
+</ul>
+<p>An attack landing in the logic layer is not an animation, but a string of discrete events: <code>attack</code> → <code>hit</code> → <code>damage</code> → <code>loss</code> → <code>die</code>. Each event completes instantaneously, leaving behind a determined state change.</p>
+<h3>Presentation Layer: The Projection of the Senses</h3>
+<p>The presentation layer translates the logic layer&#39;s discrete changes into continuous audio-visual experiences. Attack animations, chase trajectories, health bar tweens, particle effects—all of these happen here. Its characteristics are the exact opposite of the logic layer:</p>
+<ul>
+<li><strong>Parallel</strong>: Multiple animations can run simultaneously, each doing its own thing.</li>
+<li><strong>Disposable</strong>: A rendering layer crash, skipped animations—none of these affect the facts of the world.</li>
+</ul>
+<p>Logic layer events are &quot;what happened&quot;; presentation layer events are &quot;how to perform it.&quot;</p>
+<h3>Where Is the Boundary?</h3>
+<p>To determine which layer something belongs to, you only need to answer one question:</p>
+<blockquote>
+<p><strong>After this thing ends, have the facts of the world changed?</strong></p>
+</blockquote>
+<ul>
+<li>No change → Presentation layer, autonomous (swing animation, camera shake, UI transition)</li>
+<li>Changed, but only in current scene → Logic layer (HP reduction, gaining Buff, removing enemy)</li>
+<li>Changed, and cross-scene → Persistent state, must be saved (character level, inventory, quest progress)</li>
+</ul>
+<hr>
+<h2>Where Did the Continuous Processes Go?</h2>
+<p>Here there is an obvious question: games contain a huge amount of things that &quot;last for a duration&quot;—a 3-second charge-up, a 0.5-second block window, a combo input period. Isn&#39;t the logic layer discrete? Who manages these continuous processes?</p>
+<p>The answer is: <strong>temporary state windows</strong>.</p>
+<p>A temporary state window is an asynchronous container within the logic layer. It runs for a sustained duration, listening to time passing and external events, and submits a discrete conclusion to the logic layer when the window ends. For example, a 3-second charge-up: the window opens and runs continuously; when 3 seconds are up, it submits &quot;release skill&quot;; if interrupted midway, the window is destroyed and the conclusion is void.</p>
+<p>Temporary states have three properties:</p>
+<ul>
+<li><strong>Time-bounded</strong>: When the window closes, the internal state naturally perishes.</li>
+<li><strong>Preemptible</strong>: When an upper-layer event arrives, the old window can be forcibly cancelled.</li>
+<li><strong>Sandboxed</strong>: The window only produces conclusions, not processes. Process states perish with the window; the logic layer only adjudicates the final conclusion.</li>
+</ul>
+<p>This solves a major engineering problem: <strong>the logic layer does not completely rule the presentation layer, and does not need to maintain two sets of states at all times</strong>. The logic layer still emits discrete serial events outward; it merely has the internal capability to handle concurrent, time-consuming animation processes.</p>
+<p>In code engineering, this can be implemented through <strong>structured concurrency</strong>.</p>
+<hr>
+<h2>After Separation: Four Agreements</h2>
+<p>Dividing the world into two layers is only the starting point. The real question is: <strong>how can the two separated halves still be the same world?</strong></p>
+<p>If there is only separation without agreement, the logic layer becomes a mathematical model in a vacuum, and the presentation layer becomes a showy spectacle detached from facts. The core of Dual-World Theory is not &quot;separation,&quot; but &quot;reconnection through agreement after separation.&quot;</p>
+<h3>Input Signals</h3>
+<p>Player input is continuous—holding a movement key, pushing a joystick. The logic layer can only consume discrete events. <strong>The initiative to cut continuous signals lies with the logic layer, not the presentation layer.</strong></p>
+<p>The logic layer pre-defines cutting rules: key press is cut into <code>action:start</code>, release is cut into <code>action:end</code>, drag crossing a boundary is cut into <code>target:changed</code>. The presentation layer is responsible for detecting these conditions and reporting discrete events at trigger points.</p>
+<p>The presentation layer can autonomously handle continuous inputs outside the rules (camera fine-tuning, hover feedback), but these autonomous behaviors cannot produce semantic signals that players can rely on. If a player sees a monster attacking them and therefore presses dodge, this &quot;attack&quot; must have already been acknowledged by the logic layer—it cannot be a mere feint of the presentation layer.</p>
+<h3>State Subscription</h3>
+<p>The presentation layer does not directly read the logic layer&#39;s raw state tree. It consumes state through a three-stage process:</p>
+<ol>
+<li><strong>Publish</strong>: After each state change, the logic layer publishes change records in the form of <code>patches + timeline</code>.</li>
+<li><strong>Subscribe</strong>: Rendering components declare the state fragments they depend on, receiving only the changes they care about.</li>
+<li><strong>Derive</strong>: Rendering components can perform visual derivations based on subscribed state (e.g., &quot;calculate health bar color based on HP&quot;), but derivation results are limited to themselves and cannot affect other rendering components.</li>
+</ol>
+<p>What the logic layer emits is &quot;what changed in the world&quot;; what the presentation layer decides is &quot;how should I perform this change.&quot;</p>
+<h3>Sync and Discard</h3>
+<p>The presentation layer&#39;s continuous processes are not completely free. The two worlds need to synchronize with each other at specific moments:</p>
+<ul>
+<li><strong>Align</strong>: When the logic layer emits a discrete event, the presentation layer must acknowledge the latest facts of the logic state. For example, when a damage settlement event arrives, the target&#39;s true HP is already 87; the health bar may still be tweening from 100 to 87, but if a second damage is issued at this moment, the calculation base must be 87.</li>
+<li><strong>Transition</strong>: Between two alignments, the presentation layer can freely interpolate, predict, and orchestrate animations; the logic layer does not intervene in transitional presentation at all.</li>
+<li><strong>Discard</strong>: If the presentation layer&#39;s continuous process has not yet converged and the logic layer has already issued a new event (death animation hasn&#39;t finished playing, but the target has already resurrected), the presentation layer needs to directly interrupt the old animation and rapidly transition to the new fact.</li>
+</ul>
+<p><strong>At alignment moments, the latest facts must be acknowledged; during transition processes, free play is allowed.</strong></p>
+<h3>Component Autonomy</h3>
+<p>Presentation layer autonomy is embodied as a list of limited permissions:</p>
+<table>
+<thead>
+<tr>
+<th>Permission Scope</th>
+<th>Presentation Layer Autonomy</th>
+<th>Must Report to Logic Layer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Visual Presentation</td>
+<td>Animation orchestration, particles, camera push-pull, UI transitions</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Local Feedback</td>
+<td>Hover effects, press feedback, drag preview</td>
+<td>On release/confirmation</td>
+</tr>
+<tr>
+<td>Spatial Interpolation</td>
+<td>Chase trajectory, movement smoothing, turn transition</td>
+<td>On collision trigger/entering range/hit</td>
+</tr>
+<tr>
+<td>Behavioral Decision</td>
+<td>—</td>
+<td>Attack initiation, skill release, state switch</td>
+</tr>
+</tbody></table>
+<p>Core principle: <strong>If a player might make a core-state-affecting decision based on this behavior, it cannot be autonomous.</strong></p>
+<hr>
+<h2>What Does This Philosophy Bring?</h2>
+<h3>Testing-Friendly</h3>
+<p>In traditional games, causal chains are intertwined with rendering, physics, and engine timing, making independent deduction difficult. Dual-World separates logic from presentation: the same state and event inputs necessarily produce the same outputs, enabling complete causal chain deduction.</p>
+<h3>Replayability</h3>
+<p>Traditional state is scattered across object memory and callbacks, requiring extra effort to extract a complete snapshot. In Dual-World, all changes are discrete events; world history is a log. Replay brings you back to any key event.</p>
+<h3>AI-Friendly</h3>
+<p>Traditional rules are distributed across animation callbacks and state machines, making them difficult for external systems to read directly. In Dual-World, rules are explicit functions and state is pure data structures—AI can directly understand, predict, and verify.</p>
+<hr>
+<h2>Conclusion</h2>
+<p>Dual-World Theory advocates:</p>
+<blockquote>
+<p><strong>Let the deduction of world facts run in the purest, most deterministic way; let sensory experiences run in the freest, most continuous way; then use contracts to ensure that the two are always the same world.</strong></p>
+</blockquote>
+<p>The logic layer handles &quot;what happened&quot;; the presentation layer handles &quot;how to perform it.&quot; But the performance is not arbitrary—input signals define which facts that change world state are produced; state subscription defines how facts are consumed; sync and discard define when alignment must occur; the autonomy list defines the boundaries of freedom.</p>
+<p><strong>The logic layer is absolutely objective, authoritative, deterministic, and cannot be polluted by presentation; the presentation layer is derivative, interpreted by logical primitives, and has a lifecycle. The two do not know of each other&#39;s existence, are orthogonal to each other, cannot call each other, each runs, each lives and dies, and through the same set of agreements they combine into a continuous space-time.</strong></p>
+
+
+        <p style="color:var(--muted);font-size:0.95rem;">Further reading: <a href="/how-to-understand-dual-world-theory/en/">How to Understand Dual-World Theory</a></p>
+
+        <div class="meta">
+            <p>Author: <a href="/about/">Xiangxi Shi</a></p>
+        </div>
+    </main>
+</body>
+</html>
