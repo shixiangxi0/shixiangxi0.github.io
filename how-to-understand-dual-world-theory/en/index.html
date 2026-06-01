@@ -219,7 +219,7 @@
 <p>Eventually becoming a <strong>self-contained universe</strong>.</p>
 <p>Dual-World Theory holds that: <strong>Objects do not possess world facts.</strong> Objects only possess behavioral capabilities and presentation capabilities. <strong>World facts cannot belong to objects; world facts belong to the logic layer.</strong></p>
 <p>This is a form of <strong>decentralization</strong> brought about at the architectural level.</p>
-<p>For example: <strong>A character does not &quot;own&quot; its own health.</strong> True health exists in the logic layer&#39;s state tree, event timeline, authoritative state. <strong>The character object only reads, presents, and reacts to changes.</strong></p>
+<p>For example: <strong>A character does not &quot;own&quot; its own health.</strong> True health exists in the logic layer&apos;s state tree, event timeline, and authoritative state. <strong>The character object only reads, presents, and reacts to changes.</strong></p>
 <p>This makes many things suddenly extremely clear.</p>
 <p>For example, why is the &quot;death animation&quot; always so easy to mess up?</p>
 <p><strong>Traditional thinking:</strong></p>
@@ -255,17 +255,16 @@ HitTiming advancing causes ComboWindow change
 <p><strong>cause → event → state transition → projection</strong></p>
 </blockquote>
 <p>Causality must be made explicit. This is where it is extremely powerful. Because <strong>the essence of maintainability is actually causal transparency</strong>, or in other words, verifiability and traceability.</p>
-<p>Dual-World Theory naturally weakens &quot;object state-machine centrism,&quot; meaning <strong>objects cannot hold adjudication power</strong>.</p>
+<p>Dual-World Theory naturally weakens traditional OOP&apos;s &quot;object state-machine centrism&quot;—<strong>objects do not possess world facts, and objects cannot hold adjudication power.</strong></p>
 <p>Traditional game development easily becomes:</p>
 <pre><code>Idle → Run → Attack → Hit → Dead
 </code></pre>
 <p>Then each object has a giant FSM. In Dual-World, state, behavior, time windows, and presentation processes are gradually split into different layers. Eventually the object itself becomes increasingly <strong>&quot;thin.&quot;</strong> What truly becomes thick are event streams, contracts, temporary windows, and behavior combinations.</p>
-<p>This already has a bit of the flavor of <strong>&quot;shifting from Object to Process.&quot;</strong></p>
 <p>And &quot;component autonomy&quot; here is not the same as ordinary ECS autonomy. Ordinary ECS autonomy still updates itself every frame. Component autonomy in Dual-World is more like <strong>limited-authority autonomy</strong>:</p>
 <blockquote>
 <p><strong>Components can run freely and continuously, but cannot tamper with world facts. The entire process must ultimately converge into shareable, adjudicable, replayable world facts.</strong></p>
 </blockquote>
-<p>This is an extremely advanced constraint. It is more like UI&#39;s optimistic rendering, or eventual consistency in distributed systems.</p>
+<p>This is an extremely advanced constraint. It is more like UI&apos;s optimistic rendering, or eventual consistency in distributed systems.</p>
 <p>This system also has a hidden advantage: it is naturally suitable for multi-person collaboration. Because:</p>
 <ul>
 <li>Art/Animation only cares about &quot;how to perform&quot;</li>
@@ -291,7 +290,7 @@ B hit A
 <p>Thus <strong>ACID is essentially: &quot;world facts must be orderable.&quot;</strong></p>
 <p><strong>Legal system</strong>: two people accuse each other. In reality events may happen simultaneously, but the court ultimately <strong>forms a narratable causal chain</strong>. Because both social order and the media public need a &quot;version of facts.&quot; This too is a form of authority, adjudication, serialization.</p>
 <hr>
-<p>The term &quot;macro world&quot; is extremely important. Because at the microscopic level, the true physical world may indeed possess<br>quantum superposition,<br>probability states,<br>true concurrency,<br>non-determinism.<br>But once entering the macro level, the world must converge into <strong>narratable reality</strong>.</p>
+<p>The term &quot;macro world&quot; is extremely important. Because at the microscopic level, there may indeed exist<br>quantum superposition,<br>probability states,<br>true concurrency,<br>non-determinism.<br>But once entering the macro level, the world must converge into <strong>narratable reality</strong>.</p>
 <p>Why? Because <strong>macro systems need stable causality</strong>.</p>
 <p>Otherwise:</p>
 <p><strong>Cannot remember<br>
@@ -299,18 +298,7 @@ Cannot reason<br>
 Cannot collaborate<br>
 Cannot predict<br>
 Cannot govern</strong></p>
-<hr>
-<p>What Dual-World Theory ultimately points to is not a more elegant way of organizing code.</p>
-<p>It points to: <strong>any system that wants to be understood, trusted, and inherited must have a single version of facts.</strong></p>
-<p>Does your game need to be saved? Needs to be replayed? Needs to be debugged? Needs to be understood by AI? Needs to be synchronized across multiple clients?</p>
-<p>As long as one answer is &quot;yes,&quot; your game must have an orderable causal chain.</p>
-<p><strong>Not a choice, but inevitability.</strong></p>
-<p>Objects can be destroyed; world facts will not. Animations can jump; the causal chain will not. The presentation layer can crash; the logic layer&#39;s event timeline remains complete.</p>
-<p><strong>You are not writing code. You are deciding: whether this world is narratable.</strong></p>
-<p>In other words:</p>
-<blockquote>
-<p><strong>Civilization itself is built upon the orderability of causality.</strong></p>
-</blockquote>
+<p>In other words: <strong>Civilization itself is built upon the orderability of causality.</strong></p>
 
 
         <p style="color:var(--muted);font-size:0.95rem;">Companion essay: <a href="/dual-world-theory/en/">Dual-World Theory: Another Perspective on Game Architecture</a></p>
